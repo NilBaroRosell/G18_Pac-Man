@@ -3,14 +3,21 @@
 #include <iostream>
 #include <string>
 
+enum class InputKey { K_ESC, K_SPACE, K_P, K_MOUSE, K_LEFT, K_RIGHT, K_UP, K_DOWN, COUNT };
 
-using Line = struct {
+struct Vec2
+{
+	int x;
+	int y;
+};
+
+struct Line {
 	Line() : a(0), b(0), c(0) {};
 	Line(int _a, int _b, int _c) : a(_a), b(_b), c(_c) {};
 	int a, b, c;
 };
 
-using Rect = struct {
+struct Rect{
 	int x, y;
 	int w, h;
 
@@ -19,7 +26,7 @@ using Rect = struct {
 	//void SetPosition(Vector2 pos) { x = pos.x; y = pos.y; };
 };
 
-using Color = struct {
+struct Color {
 	int r, g, b, a;
 	
 	Color() {};
