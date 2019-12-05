@@ -27,10 +27,10 @@ struct Rect{
 };
 
 struct Color {
-	int r, g, b, a;
+	unsigned char r, g, b, a;
 	
 	Color() {};
-	Color(int _r, int _g, int _b, int _a) : r(_r), g(_g), b(_b), a(_a) {};
+	Color(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a) : r(_r), g(_g), b(_b), a(_a) {};
 };
 
 using Font = struct {

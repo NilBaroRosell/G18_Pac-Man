@@ -5,13 +5,15 @@
 class Inputs
 {
 private:
-	bool keys[9];
-	Vec2 mousePosition;
 	SDL_Event event;
 public:
+	bool keyPressed[(int)InputKey::COUNT];
+	bool keyDown[(int)InputKey::COUNT];
+	Vec2 mousePosition;
 	Inputs();
-	bool* GetInputs();
-	Vec2 GetMousePosition();
+	void UpdateInputs();
+	void SetKey(InputKey key, bool value);
+	void SetAllFalse();
 	~Inputs();
 };
 

@@ -1,3 +1,11 @@
-﻿  Renderer.cpp
-SDL2main.lib(SDL_windows_main.obj) : error LNK2019: símbolo externo _SDL_main sin resolver al que se hace referencia en la función _main_utf8
-C:\Users\nbr19\Documents\ENTI\G18_Baró_Serra_AA2-1\Pacman\G18_Pac-Man\G18_Pac-Man\\bin\Win32Debug\Pac-Man.exe : fatal error LNK1120: 1 externos sin resolver
+﻿  Inputs.cpp
+  Main.cpp
+c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(12): warning C4297: 'SDL_main': function assumed not to throw an exception but does
+  c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(12): note: __declspec(nothrow), throw(), noexcept(true), or noexcept was specified on the function
+c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(17): warning C4297: 'SDL_main': function assumed not to throw an exception but does
+  c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(17): note: __declspec(nothrow), throw(), noexcept(true), or noexcept was specified on the function
+c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(22): warning C4297: 'SDL_main': function assumed not to throw an exception but does
+  c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(22): note: __declspec(nothrow), throw(), noexcept(true), or noexcept was specified on the function
+  Generating Code...
+  Pac-Man.vcxproj -> C:\Users\nil.baro\Desktop\PACMAN\G18_Pac-Man\G18_Pac-Man\\bin\Win32Debug\Pac-Man.exe
+  0 File(s) copied

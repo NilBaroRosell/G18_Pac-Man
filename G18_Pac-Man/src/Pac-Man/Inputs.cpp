@@ -2,55 +2,66 @@
 
 Inputs::Inputs()
 {
-	for (int i = 0; i < (int)InputKey::COUNT; i++)
-	{
-		keys[i] = false;
-	}
-	mousePosition.x = 0;
-	mousePosition.y = 0;
 }
 
-bool* Inputs::GetInputs()
+void Inputs::UpdateInputs()
 {
-	keys[(int)InputKey::K_MOUSE] = false;
-	keys[(int)InputKey::K_ESC] = false;
+	//SetAllFalse();
 
 	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_QUIT:
-			keys[(int)InputKey::K_ESC] = true;
+			keyPressed[(int)InputKey::K_ESC] = true;
 			break;
 		case SDL_KEYDOWN:
-			keys[(int)InputKey::K_ESC] = event.key.keysym.sym == SDLK_ESCAPE;
-			keys[(int)InputKey::K_SPACE] = event.key.keysym.sym == SDLK_SPACE;
-			keys[(int)InputKey::K_P] = event.key.keysym.sym == SDL_SCANCODE_P;
-			keys[(int)InputKey::K_LEFT] = event.key.keysym.sym == SDLK_LEFT;
-			keys[(int)InputKey::K_RIGHT] = event.key.keysym.sym == SDLK_RIGHT;
-			keys[(int)InputKey::K_UP] = event.key.keysym.sym == SDLK_UP;
-			keys[(int)InputKey::K_DOWN] = event.key.keysym.sym == SDLK_DOWN;
+			if(event.key.keysym.sym == SDLK_ESCAPE) keyPressed[(int)InputKey::K_ESC] = true;
+			if(event.key.keysym.sym == SDLK_SPACE) keyPressed[(int)InputKey::K_SPACE] = true;
+			if(event.key.keysym.sym == 'p') keyPressed[(int)InputKey::K_P] = true;
+			if(event.key.keysym.sym == SDLK_LEFT) keyPressed[(int)InputKey::K_LEFT] = true;
+			if(event.key.keysym.sym == SDLK_RIGHT) keyPressed[(int)InputKey::K_RIGHT] = true;
+			if(event.key.keysym.sym == SDLK_UP) keyPressed[(int)InputKey::K_UP] = true;
+			if(event.key.keysym.sym == SDLK_DOWN) keyPressed[(int)InputKey::K_DOWN] = true;
+			break;
+		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_ESCAPE) keyPressed[(int)InputKey::K_ESC] = false;
+			if (event.key.keysym.sym == SDLK_SPACE) keyPressed[(int)InputKey::K_SPACE] = false;
+			if (event.key.keysym.sym == SDL_SCANCODE_P) keyPressed[(int)InputKey::K_P] = false;
+			if (event.key.keysym.sym == SDLK_LEFT) keyPressed[(int)InputKey::K_LEFT] = false;
+			if (event.key.keysym.sym == SDLK_RIGHT) keyPressed[(int)InputKey::K_RIGHT] = false;
+			if (event.key.keysym.sym == SDLK_UP) keyPressed[(int)InputKey::K_UP] = false;
+			if (event.key.keysym.sym == SDLK_DOWN) keyPressed[(int)InputKey::K_DOWN] = false;
 			break;
 		case SDL_MOUSEBUTTONUP:
-			keys[(int)InputKey::K_MOUSE] = true;
+			keyPressed[(int)InputKey::K_MOUSE] = true;
+			break;
+		case SDL_MOUSEMOTION:
+			mousePosition.x = event.motion.x;
+			mousePosition.y = event.motion.y;
 			break;
 		default:;
 		}
 	}
-
-	return keys;
 }
 
-Vec2 Inputs::GetMousePosition()
+void Inputs::SetKey(InputKey key, bool value)
 {
-	if (SDL_PollEvent(&event)) {
-		switch (event.type) {
-			case SDL_MOUSEMOTION:
-				mousePosition.x = event.motion.x;
-				mousePosition.y = event.motion.y;
-				break;
-			default: break;
-		}
+	if (!keyPressed[(int)key])
+	{
+		keyDown[(int)key] = value;
 	}
-	return mousePosition;
+	else
+	{
+		keyDown[(int)key] = false;
+	}
+	keyPressed[(int)key] = value;
+}
+
+void Inputs::SetAllFalse()
+{
+	for (int i = 0; i < (int)InputKey::COUNT; i++)
+	{
+		keyPressed[i] = false;
+	}
 }
 
 Inputs::~Inputs()
