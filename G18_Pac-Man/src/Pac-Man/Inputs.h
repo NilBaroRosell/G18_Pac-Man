@@ -14,6 +14,8 @@ public:
 	void UpdateInputs();
 	void SetKey(InputKey key, bool value);
 	void SetAllFalse();
+	bool* GetInputs();
+	Vec2 GetMousePosition();
 	~Inputs();
 };
 

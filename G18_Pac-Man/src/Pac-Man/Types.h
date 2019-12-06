@@ -4,12 +4,15 @@
 #include <string>
 
 enum class InputKey { K_ESC, K_SPACE, K_P, K_MOUSE, K_LEFT, K_RIGHT, K_UP, K_DOWN, COUNT };
+enum GameStates { SPLASH_SCREEN, MENU, PLAY, RANKING, EXIT, CURRENT };
+enum SceneStates { WAITING_SPLASH, MENU_SPLASH, WAITING_MENU, PLAY_MENU, RANKING_MENU, EXIT_MENU, START_GAME_PLAY, RUNNING_PLAY, PAUSED_PLAY, GAME_OVER_PLAY, WAITING_RANKING, BACK_RANKING };
 
 struct Vec2
 {
 	int x;
 	int y;
 };
+
 
 struct Line {
 	Line() : a(0), b(0), c(0) {};
@@ -30,7 +33,7 @@ struct Color {
 	unsigned char r, g, b, a;
 	
 	Color() {};
-	Color(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a) : r(_r), g(_g), b(_b), a(_a) {};
+	Color(int _r, int _g, int _b, int _a) : r(_r), g(_g), b(_b), a(_a) {};
 };
 
 using Font = struct {
@@ -39,7 +42,7 @@ using Font = struct {
 	int size;
 };
 
-using Text = struct {
+struct Text {
 	std::string id;
 	std::string text;
 	Color color;

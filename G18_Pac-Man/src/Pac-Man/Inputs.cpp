@@ -2,11 +2,13 @@
 
 Inputs::Inputs()
 {
+	mousePosition.x = 0;
+	mousePosition.y = 0;
 }
 
 void Inputs::UpdateInputs()
 {
-	//SetAllFalse();
+	SetAllFalse();
 
 	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -62,6 +64,16 @@ void Inputs::SetAllFalse()
 	{
 		keyPressed[i] = false;
 	}
+}
+
+bool* Inputs::GetInputs()
+{
+	return keyPressed;
+}
+
+Vec2 Inputs::GetMousePosition()
+{
+	return mousePosition;
 }
 
 Inputs::~Inputs()

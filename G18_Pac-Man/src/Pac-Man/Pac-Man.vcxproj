@@ -160,14 +160,30 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="Inputs.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Play.cpp" />
+    <ClCompile Include="Ranking.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SplashScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="GameController.h" />
     <ClInclude Include="Inputs.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Play.h" />
+    <ClInclude Include="Ranking.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

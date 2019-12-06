@@ -1,11 +1,13 @@
-﻿  Inputs.cpp
+﻿  Button.cpp
+  GameController.cpp
   Main.cpp
-c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(12): warning C4297: 'SDL_main': function assumed not to throw an exception but does
-  c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(12): note: __declspec(nothrow), throw(), noexcept(true), or noexcept was specified on the function
-c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(17): warning C4297: 'SDL_main': function assumed not to throw an exception but does
-  c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(17): note: __declspec(nothrow), throw(), noexcept(true), or noexcept was specified on the function
-c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(22): warning C4297: 'SDL_main': function assumed not to throw an exception but does
-  c:\users\nil.baro\desktop\pacman\g18_pac-man\g18_pac-man\src\pac-man\main.cpp(22): note: __declspec(nothrow), throw(), noexcept(true), or noexcept was specified on the function
-  Generating Code...
-  Pac-Man.vcxproj -> C:\Users\nil.baro\Desktop\PACMAN\G18_Pac-Man\G18_Pac-Man\\bin\Win32Debug\Pac-Man.exe
-  0 File(s) copied
+  Menu.cpp
+  Object.cpp
+  Play.cpp
+  Ranking.cpp
+  SceneManager.cpp
+  SplashScreen.cpp
+c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\splashscreen.cpp(17): warning C4244: '=': conversión de 'clock_t' a 'float'; posible pérdida de datos
+  Generando código...
+  Pac-Man.vcxproj -> C:\Users\nbr19\Documents\ENTI\G18_Baró_Serra_AA2-1\Pacman\G18_Pac-Man\G18_Pac-Man\\bin\Win32Debug\Pac-Man.exe
+  0 archivo(s) copiado(s)

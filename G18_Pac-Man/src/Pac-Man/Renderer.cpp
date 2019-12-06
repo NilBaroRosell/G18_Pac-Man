@@ -6,7 +6,7 @@ Renderer::Renderer()
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) throw "No es pot inicialitzar SDL subsystems";
 
 	// --- WINDOW ---
-	m_window = SDL_CreateWindow("SDL...", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+	m_window = SDL_CreateWindow("SDL...", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (m_window == nullptr) throw "No es pot inicialitzar SDL_Window";
 
 	// --- RENDERER ---
@@ -22,6 +22,34 @@ Renderer::Renderer()
 
 	// ---- TTF ----
 	if (TTF_Init() != 0) throw"No es pot inicialitzar SDL_ttf";
+
+	LoadTexture(SPLASH_IMAGE_ID, SPLASH_BACKGROUND_PATH);
+
+	Font menuFont{ MENU_FONT_ID, MENU_FONT_PATH, MENU_FONT_SIZE };
+	LoadFont(menuFont);
+
+	Font playFont{ PLAY_FONT_ID, PLAY_FONT_PATH, PLAY_FONT_SIZE };
+	LoadFont(playFont);
+
+	Text playButton{ PLAY_BUTTON_ID, PLAY_BUTTON_TEXT, PLAY_BUTTON_COLOR, PLAY_BUTTON_W, PLAY_BUTTON_H };
+	LoadTextureText(menuFont.id, playButton);
+	Text playButtonHover{ PLAY_BUTTON_HOVER_ID, PLAY_BUTTON_HOVER_TEXT, PLAY_BUTTON_COLOR, PLAY_BUTTON_W, PLAY_BUTTON_H };
+	LoadTextureText(menuFont.id, playButtonHover);
+
+	Text soundButton{ SOUND_BUTTON_ID, SOUND_BUTTON_TEXT, SOUND_BUTTON_COLOR, SOUND_BUTTON_W, SOUND_BUTTON_H };
+	LoadTextureText(menuFont.id, soundButton);
+	Text soundButtonHover{ SOUND_BUTTON_HOVER_ID, SOUND_BUTTON_HOVER_TEXT, SOUND_BUTTON_COLOR, SOUND_BUTTON_W, SOUND_BUTTON_H };
+	LoadTextureText(menuFont.id, soundButtonHover);
+
+	Text rankingButton{ RANKING_BUTTON_ID, RANKING_BUTTON_TEXT, RANKING_BUTTON_COLOR, RANKING_BUTTON_W, RANKING_BUTTON_H };
+	LoadTextureText(menuFont.id, rankingButton);
+	Text rankingButtonHover{ RANKING_BUTTON_HOVER_ID, RANKING_BUTTON_HOVER_TEXT, RANKING_BUTTON_COLOR, RANKING_BUTTON_W, RANKING_BUTTON_H };
+	LoadTextureText(menuFont.id, rankingButtonHover);
+
+	Text exitButton{ EXIT_BUTTON_ID, EXIT_BUTTON_TEXT, EXIT_BUTTON_COLOR, EXIT_BUTTON_W, EXIT_BUTTON_H };
+	LoadTextureText(menuFont.id, exitButton);
+	Text exitButtonHover{ EXIT_BUTTON_HOVER_ID, EXIT_BUTTON_HOVER_TEXT, EXIT_BUTTON_COLOR, EXIT_BUTTON_W, EXIT_BUTTON_H };
+	LoadTextureText(menuFont.id, exitButtonHover);
 
 };
 
@@ -71,17 +99,42 @@ Vec2 Renderer::GetTextureSize(const std::string &id) {
 	return {w, h};
 };
 
-void Renderer::PushImage(const std::string &id, const SDL_Rect &rect) {
-	SDL_RenderCopy(m_renderer, m_textureData[id], nullptr, &rect);
+void Renderer::PushImage(const std::string &id, const Rect &rect) {
+	SDL_Rect newRect;
+	newRect.x = rect.x;
+	newRect.y = rect.y;
+	newRect.w = rect.w;
+	newRect.h = rect.h;
+	SDL_RenderCopy(m_renderer, m_textureData[id], nullptr, &newRect);
 };
 
-void Renderer::PushSprite(const std::string &id, const SDL_Rect &rectSprite,const SDL_Rect &rectPos) {
-	SDL_RenderCopy(m_renderer, m_textureData[id], &rectSprite, &rectPos);
+void Renderer::PushSprite(const std::string &id, const Rect &rectSprite,const Rect &rectPos) {
+	SDL_Rect newSprite;
+	newSprite.x = rectSprite.x;
+	newSprite.y = rectSprite.y;
+	newSprite.w = rectSprite.w;
+	newSprite.h = rectSprite.h;
+	SDL_Rect newPos;
+	newPos.x = rectPos.x;
+	newPos.y = rectPos.y;
+	newPos.w = rectPos.w;
+	newPos.h = rectPos.h;
+	SDL_RenderCopy(m_renderer, m_textureData[id], &newSprite, &newPos);
 }
 
-void Renderer::PushRotatedSprite(const std::string & id, const SDL_Rect & rectSprite, const SDL_Rect & rectPos, float angle){
+void Renderer::PushRotatedSprite(const std::string & id, const Rect & rectSprite, const Rect & rectPos, float angle){
 	SDL_Point center = { rectPos.w / 2, rectPos.h / 2 };
-	SDL_RenderCopyEx(m_renderer, m_textureData[id], &rectSprite, &rectPos, angle, &center, SDL_FLIP_NONE);
+	SDL_Rect newSprite;
+	newSprite.x = rectSprite.x;
+	newSprite.y = rectSprite.y;
+	newSprite.w = rectSprite.w;
+	newSprite.h = rectSprite.h;
+	SDL_Rect newPos;
+	newPos.x = rectPos.x;
+	newPos.y = rectPos.y;
+	newPos.w = rectPos.w;
+	newPos.h = rectPos.h;
+	SDL_RenderCopyEx(m_renderer, m_textureData[id], &newSprite, &newPos, angle, &center, SDL_FLIP_NONE);
 }
 
 void Renderer::SetRendreDrawColor(int r, int g, int b)
