@@ -8,33 +8,36 @@ Button::Button(std::string _normalId, std::string _hoverId, int _x, int _y, int 
 {
 	normalId = _normalId;
 	hoverId = _hoverId;
-	objectId = normalId;
-	objectRect.x = _x;
-	objectRect.y = _y;
-	objectRect.w = _w;
-	objectRect.h = _h;
+	buttonId = normalId;
+	buttonRect.x = _x;
+	buttonRect.y = _y;
+	buttonRect.w = _w;
+	buttonRect.h = _h;
 }
 
-void Button::Update(Vec2 _mousePosition)
+void Button::Update(bool _mousePressed, Vec2 _mousePosition)
 {
 	if (checkHover(_mousePosition))
 	{
-		objectId = hoverId;
+		if (_mousePressed) isPressed = true;
+		else isPressed = false;
+		buttonId = hoverId;
 	}
 	else
 	{
-		objectId = normalId;
+		isPressed = false;
+		buttonId = normalId;
 	}
 }
 
 void Button::Draw()
 {
-	Renderer::Instance()->PushImage(objectId, objectRect);
+	Renderer::Instance()->PushImage(buttonId, buttonRect);
 }
 
 bool Button::checkHover(Vec2 _mousePos)
 {
-	return((_mousePos.x > objectRect.x && _mousePos.x < objectRect.x + objectRect.w) && (_mousePos.y > objectRect.y && _mousePos.y < objectRect.y + objectRect.h));
+	return((_mousePos.x > buttonRect.x && _mousePos.x < buttonRect.x + buttonRect.w) && (_mousePos.y > buttonRect.y && _mousePos.y < buttonRect.y + buttonRect.h));
 }
 
 Button::~Button()

@@ -20,7 +20,9 @@ void Ranking::Update(bool * _keys, Vec2 _mousePosition)
 
 void Ranking::Draw()
 {
-	std::cout << "DRAWING RANKING" << std::endl;
+	Renderer::Instance()->SetRendreDrawColor(0, 255, 0);
+	Renderer::Instance()->Clear();
+	Renderer::Instance()->Render();
 }
 
 

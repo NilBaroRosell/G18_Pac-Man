@@ -1,10 +1,18 @@
 ﻿  Button.cpp
   GameController.cpp
+c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\play.h(9): warning C4200: se ha utilizado una extensión no estándar: matriz de tamaño cero en struct/union
+  c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\play.h(9): note: Un constructor con valor predeterminado o un operador de asignación de copia o movimiento ignorará a este miembro.
+  HUD.cpp
   Main.cpp
+c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\play.h(9): warning C4200: se ha utilizado una extensión no estándar: matriz de tamaño cero en struct/union
+  c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\play.h(9): note: Un constructor con valor predeterminado o un operador de asignación de copia o movimiento ignorará a este miembro.
   Menu.cpp
   Object.cpp
   Play.cpp
+c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\play.h(9): warning C4200: se ha utilizado una extensión no estándar: matriz de tamaño cero en struct/union
+  c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\play.h(9): note: Un constructor con valor predeterminado o un operador de asignación de copia o movimiento ignorará a este miembro.
   Ranking.cpp
+  Renderer.cpp
   SceneManager.cpp
   SplashScreen.cpp
 c:\users\nbr19\documents\enti\g18_baró_serra_aa2-1\pacman\g18_pac-man\g18_pac-man\src\pac-man\splashscreen.cpp(17): warning C4244: '=': conversión de 'clock_t' a 'float'; posible pérdida de datos

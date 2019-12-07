@@ -12,6 +12,6 @@ int main(int, char*[])
 		gameController.Run();
 	}
 
-	system("pause");
+	Renderer::Instance()->~Renderer();
 	return 0;
 }

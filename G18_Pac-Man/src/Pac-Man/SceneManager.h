@@ -1,6 +1,7 @@
 #pragma once
 #include "Types.h"
 #include "Inputs.h"
+#include "Constants.h"
 #include "Renderer.h"
 
 class SceneManager

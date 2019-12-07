@@ -1,12 +1,12 @@
 #pragma once
 #include "Types.h"
-#include "Play.h"
+#include "Renderer.h"
 class Object
 {
-protected:
+public:
 	std::string objectId;
 	Rect objectRect;
-public:
+	Rect objectSpriteRect;
 	Object();
 	virtual void Update();
 	virtual void Draw();

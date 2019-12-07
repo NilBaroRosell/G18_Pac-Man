@@ -13,7 +13,7 @@ void Inputs::UpdateInputs()
 	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_QUIT:
-			keyPressed[(int)InputKey::K_ESC] = true;
+			keyPressed[(int)InputKey::QUIT] = true;
 			break;
 		case SDL_KEYDOWN:
 			if(event.key.keysym.sym == SDLK_ESCAPE) keyPressed[(int)InputKey::K_ESC] = true;
@@ -69,6 +69,11 @@ void Inputs::SetAllFalse()
 bool* Inputs::GetInputs()
 {
 	return keyPressed;
+}
+
+bool Inputs::GetKey(InputKey key)
+{
+	return keyPressed[(int)key];
 }
 
 Vec2 Inputs::GetMousePosition()

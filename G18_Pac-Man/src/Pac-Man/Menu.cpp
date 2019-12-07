@@ -2,10 +2,10 @@
 
 Menu::Menu()
 {
-	playButton = Button(PLAY_BUTTON_ID, PLAY_BUTTON_HOVER_ID, PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_W, PLAY_BUTTON_H);
-	soundButton = Button(SOUND_BUTTON_ID, SOUND_BUTTON_HOVER_ID, SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_W, SOUND_BUTTON_H);
-	rankingButton = Button(RANKING_BUTTON_ID, RANKING_BUTTON_HOVER_ID, RANKING_BUTTON_X, RANKING_BUTTON_Y, RANKING_BUTTON_W, RANKING_BUTTON_H);
-	exitButton = Button(EXIT_BUTTON_ID, EXIT_BUTTON_HOVER_ID, EXIT_BUTTON_X, EXIT_BUTTON_Y, EXIT_BUTTON_W, EXIT_BUTTON_H);
+	playButton = Button(PLAY_BUTTON::ID, PLAY_BUTTON::HOVER_ID, PLAY_BUTTON::X, PLAY_BUTTON::Y, PLAY_BUTTON::W, PLAY_BUTTON::H);
+	soundButton = Button(SOUND_BUTTON::ID, SOUND_BUTTON::HOVER_ID, SOUND_BUTTON::X, SOUND_BUTTON::Y, SOUND_BUTTON::W, SOUND_BUTTON::H);
+	rankingButton = Button(RANKING_BUTTON::ID, RANKING_BUTTON::HOVER_ID, RANKING_BUTTON::X, RANKING_BUTTON::Y, RANKING_BUTTON::W, RANKING_BUTTON::H);
+	exitButton = Button(EXIT_BUTTON::ID, EXIT_BUTTON::HOVER_ID, EXIT_BUTTON::X, EXIT_BUTTON::Y, EXIT_BUTTON::W, EXIT_BUTTON::H);
 	state = SceneStates::WAITING_MENU;
 }
 
@@ -14,10 +14,14 @@ void Menu::Update(bool * _keys, Vec2 _mousePosition)
 	switch (state)
 	{
 		case WAITING_MENU:
-			playButton.Update(_mousePosition);
-			soundButton.Update(_mousePosition);
-			rankingButton.Update(_mousePosition);
-			exitButton.Update(_mousePosition);
+			playButton.Update(_keys[(int)InputKey::K_MOUSE], _mousePosition);
+			soundButton.Update(_keys[(int)InputKey::K_MOUSE], _mousePosition);
+			rankingButton.Update(_keys[(int)InputKey::K_MOUSE], _mousePosition);
+			exitButton.Update(_keys[(int)InputKey::K_MOUSE], _mousePosition);
+			if (playButton.isPressed) state = SceneStates::PLAY_MENU;
+			else if (soundButton.isPressed) std::cout << "SOUND ENABLED" << std::endl;
+			else if (rankingButton.isPressed) state = SceneStates::RANKING_MENU;
+			else if (exitButton.isPressed) state = SceneStates::EXIT_MENU;
 			break;
 		case PLAY_MENU:
 			break;
@@ -40,7 +44,6 @@ void Menu::Draw()
 	exitButton.Draw();
 	Renderer::Instance()->Render();
 }
-
 
 Menu::~Menu()
 {
