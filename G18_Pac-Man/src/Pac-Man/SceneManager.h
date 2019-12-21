@@ -3,9 +3,12 @@
 #include "Inputs.h"
 #include "Constants.h"
 #include "Renderer.h"
+#include <SDL_mixer.h>
 
 class SceneManager
 {
+protected: 
+	Mix_Music* soundtrack;
 public:
 	SceneStates state;
 	SceneManager();

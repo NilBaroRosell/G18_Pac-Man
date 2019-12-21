@@ -1,0 +1,9 @@
+﻿  Blinky.cpp
+d:\enti\pacman 2n\g18_pac-man\g18_pac-man\src\pac-man\blinky.cpp(44): warning C4244: '=': conversión de 'clock_t' a 'float'; posible pérdida de datos
+  Clyde.cpp
+d:\enti\pacman 2n\g18_pac-man\g18_pac-man\src\pac-man\clyde.cpp(36): warning C4244: '=': conversión de 'clock_t' a 'float'; posible pérdida de datos
+  Inky.cpp
+d:\enti\pacman 2n\g18_pac-man\g18_pac-man\src\pac-man\inky.cpp(42): warning C4244: '=': conversión de 'clock_t' a 'float'; posible pérdida de datos
+  Generando código...
+  Pac-Man.vcxproj -> D:\ENTI\PACMAN 2n\G18_Pac-Man\G18_Pac-Man\\bin\Win32Debug\G18_AA2-2.exe
+  0 archivo(s) copiado(s)

@@ -1,16 +1,9 @@
-﻿  Button.cpp
-  GameController.cpp
-  HUD.cpp
-  Inputs.cpp
-  Main.cpp
-  Menu.cpp
-  Object.cpp
-  Play.cpp
-  Ranking.cpp
-  Renderer.cpp
-  SceneManager.cpp
-  SplashScreen.cpp
-d:\enti\pacman 2n\g18_pac-man\g18_pac-man\src\pac-man\splashscreen.cpp(17): warning C4244: '=': conversión de 'clock_t' a 'float'; posible pérdida de datos
-  Generando código...
-  Pac-Man.vcxproj -> D:\ENTI\PACMAN 2n\G18_Pac-Man\G18_Pac-Man\\bin\Win32Debug\Pac-Man.exe
+﻿  Play.cpp
+c:\users\nil baro\desktop\asaaaaaaaaaa\g18_pac-man\g18_pac-man\src\pac-man\play.cpp(164): warning C4018: '<': no coinciden signed/unsigned
+c:\users\nil baro\desktop\asaaaaaaaaaa\g18_pac-man\g18_pac-man\src\pac-man\play.cpp(181): warning C4018: '<': no coinciden signed/unsigned
+c:\users\nil baro\desktop\asaaaaaaaaaa\g18_pac-man\g18_pac-man\src\pac-man\play.cpp(191): warning C4018: '<': no coinciden signed/unsigned
+c:\users\nil baro\desktop\asaaaaaaaaaa\g18_pac-man\g18_pac-man\src\pac-man\play.cpp(219): warning C4018: '<': no coinciden signed/unsigned
+c:\users\nil baro\desktop\asaaaaaaaaaa\g18_pac-man\g18_pac-man\src\pac-man\play.cpp(223): warning C4018: '<': no coinciden signed/unsigned
+c:\users\nil baro\desktop\asaaaaaaaaaa\g18_pac-man\g18_pac-man\src\pac-man\play.cpp(227): warning C4018: '<': no coinciden signed/unsigned
+  Pac-Man.vcxproj -> C:\Users\Nil Baro\Desktop\ASAAAAAAAAAA\G18_Pac-Man\G18_Pac-Man\\bin\Win32Debug\Pac-Man.exe
   0 archivo(s) copiado(s)

@@ -51,6 +51,42 @@ Renderer::Renderer()
 	Text exitButtonHover{ EXIT_BUTTON::HOVER_ID, EXIT_BUTTON::HOVER_TEXT, EXIT_BUTTON::COLOR, EXIT_BUTTON::W, EXIT_BUTTON::H };
 	LoadTextureText(menuFont.id, exitButtonHover);
 
+	Text Score0{ SCORE_0::ID, SCORE_0::TEXT, SCORE_0::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score0);
+	Text Score1{ SCORE_1::ID, SCORE_1::TEXT, SCORE_1::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score1);
+	Text Score2{ SCORE_2::ID, SCORE_2::TEXT, SCORE_2::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score2);
+	Text Score3{ SCORE_3::ID, SCORE_3::TEXT, SCORE_3::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score3);
+	Text Score4{ SCORE_4::ID, SCORE_4::TEXT, SCORE_4::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score4);
+	Text Score5{ SCORE_5::ID, SCORE_5::TEXT, SCORE_5::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score5);
+	Text Score6{ SCORE_6::ID, SCORE_6::TEXT, SCORE_6::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score6);
+	Text Score7{ SCORE_7::ID, SCORE_7::TEXT, SCORE_7::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score7);
+	Text Score8{ SCORE_8::ID, SCORE_8::TEXT, SCORE_8::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score8);
+	Text Score9{ SCORE_9::ID, SCORE_9::TEXT, SCORE_9::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, Score9);
+
+	Text Spcae_Start1{ PRESS_SPACE1::ID, PRESS_SPACE1::TEXT, PRESS_SPACE1::COLOR, PRESS_SPACE1::W, PRESS_SPACE1::H };
+	LoadTextureText(menuFont.id, Spcae_Start1);
+	Text Spcae_Start2{ PRESS_SPACE2::ID, PRESS_SPACE2::TEXT, PRESS_SPACE2::COLOR, PRESS_SPACE2::W, PRESS_SPACE2::H };
+	LoadTextureText(menuFont.id, Spcae_Start2);
+	Text Spcae_Pause1{ STOP_PRESS_SPACE1::ID, STOP_PRESS_SPACE1::TEXT, STOP_PRESS_SPACE1::COLOR, STOP_PRESS_SPACE1::W, STOP_PRESS_SPACE1::H };
+	LoadTextureText(menuFont.id, Spcae_Pause1);
+	Text Spcae_Pause2{ STOP_PRESS_SPACE2::ID, STOP_PRESS_SPACE2::TEXT, STOP_PRESS_SPACE2::COLOR, STOP_PRESS_SPACE2::W, STOP_PRESS_SPACE2::H };
+	LoadTextureText(menuFont.id, Spcae_Pause2);
+	Text Spcae_Pause3{ STOP_PRESS_SPACE3::ID, STOP_PRESS_SPACE3::TEXT, STOP_PRESS_SPACE3::COLOR, STOP_PRESS_SPACE3::W, STOP_PRESS_SPACE3::H };
+	LoadTextureText(menuFont.id, Spcae_Pause3);
+	Text Sound_Pause{ SOUND_PAUSE::ID, SOUND_PAUSE::TEXT, SOUND_PAUSE::COLOR, SOUND_PAUSE::W, SOUND_PAUSE::H };
+	LoadTextureText(menuFont.id, Sound_Pause);
+	Text NullText{ NULL_TEXT::ID, NULL_TEXT::TEXT, NULL_TEXT::COLOR, NULL_TEXT::W, NULL_TEXT::H };
+	LoadTextureText(menuFont.id, NullText);
+
 	Text spritesheet{ PACMAN_SPRITESHEET::ID, PACMAN_SPRITESHEET::TEXT, PACMAN_SPRITESHEET::COLOR, PACMAN_SPRITESHEET::W, PACMAN_SPRITESHEET::H };
 	LoadTexture(spritesheet.id, PACMAN_SPRITESHEET::PATH);
 };

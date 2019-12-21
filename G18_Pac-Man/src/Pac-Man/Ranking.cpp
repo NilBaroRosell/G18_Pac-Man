@@ -20,7 +20,7 @@ void Ranking::Update(bool * _keys, Vec2 _mousePosition)
 
 void Ranking::Draw()
 {
-	Renderer::Instance()->SetRendreDrawColor(0, 255, 0);
+	Renderer::Instance()->SetRendreDrawColor(0, 0, 0);
 	Renderer::Instance()->Clear();
 	Renderer::Instance()->Render();
 }
