@@ -1,7 +1,5 @@
 #include "Player.h"
 
-
-
 Player::Player()
 {
 	direction = PLAYER_INITIAL_INFO::DIRECTION;
@@ -9,37 +7,126 @@ Player::Player()
 	score = PLAYER_INITIAL_INFO::SCORE;
 	lives = PLAYER_INITIAL_INFO::LIVES;
 	lastAnimation = PLAYER::X_LEFT_CLOSE_SPRITE;
+	lastAnimationY = PLAYER::Y_DYING_1;
 	lastTime = clock();
 	timeDown = 0.15f;
+	dying = false;
 }
 
 void Player::Update(bool * _keys)
 {
-	if (_keys[(int)InputKey::K_LEFT])
+	if (!dying)
 	{
-		direction = 0;
-	}
-	else if (_keys[(int)InputKey::K_RIGHT])
-	{
-		direction = 1;
-	}
-	else if (_keys[(int)InputKey::K_UP])
-	{
-		direction = 2;
-	}
-	else if (_keys[(int)InputKey::K_DOWN])
-	{
-		direction = 3;
+		if (_keys[(int)InputKey::K_LEFT])
+		{
+			direction = 0;
+		}
+		else if (_keys[(int)InputKey::K_RIGHT])
+		{
+			direction = 1;
+		}
+		else if (_keys[(int)InputKey::K_UP])
+		{
+			direction = 2;
+		}
+		else if (_keys[(int)InputKey::K_DOWN])
+		{
+			direction = 3;
+		}
+		else
+		{
+			direction = lastDirection;
+		}
+
+		deltaTime = (clock() - lastTime);
+		lastTime = clock();
+		deltaTime /= CLOCKS_PER_SEC;
+		timeDown -= deltaTime;
 	}
 	else
 	{
-		direction = lastDirection;
+		deltaTime = (clock() - lastTime);
+		lastTime = clock();
+		deltaTime /= CLOCKS_PER_SEC;
+		timeDown -= deltaTime;
+		if (timeDown <= 0)
+		{
+			NextDyingAnimation();
+		}
 	}
 
-	deltaTime = (clock() - lastTime);
+}
+
+void Player::NextDyingAnimation()
+{
+	if (lastAnimationY == PLAYER::Y_DYING_1)
+	{
+		if (lastAnimation == PLAYER::X_DYING_6)
+		{
+			SetNewAnimation(PLAYER::X_DYING_7, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_7)
+		{
+			SetNewAnimation(PLAYER::X_DYING_8, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_8)
+		{
+			SetNewAnimation(PLAYER::X_DYING_1, PLAYER::Y_DYING_2);
+		}
+	}
+	else if (lastAnimationY == PLAYER::Y_DYING_2)
+	{
+		if (lastAnimation == PLAYER::X_DYING_1)
+		{
+			SetNewAnimation(PLAYER::X_DYING_2, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_2)
+		{
+			SetNewAnimation(PLAYER::X_DYING_3, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_3)
+		{
+			SetNewAnimation(PLAYER::X_DYING_4, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_4)
+		{
+			SetNewAnimation(PLAYER::X_DYING_5, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_5)
+		{
+			SetNewAnimation(PLAYER::X_DYING_6, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_6)
+		{
+			SetNewAnimation(PLAYER::X_DYING_7, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_7)
+		{
+			SetNewAnimation(PLAYER::X_DYING_8, lastAnimationY);
+		}
+		else if (lastAnimation == PLAYER::X_DYING_8)
+		{
+			objectRect.x = initialPosition.x * SIZE;
+			objectRect.y = initialPosition.y * SIZE;
+			actualPosition.x = initialPosition.x;
+			actualPosition.y = initialPosition.y;
+			lives--;
+			direction = PLAYER_INITIAL_INFO::DIRECTION;
+			SetNewAnimation(PLAYER::X_LEFT_CLOSE_SPRITE);
+			lastAnimation = PLAYER::X_LEFT_CLOSE_SPRITE;
+			dying = false;
+		}
+	}
+}
+
+void Player::SetNewAnimation(int _animationX, int _animationY)
+{
+	objectSpriteRect.x = (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * _animationX;
+	objectSpriteRect.y = (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * _animationY;
+	lastAnimation = _animationX;
+	lastAnimationY = _animationY;
+	timeDown = 0.15f;
 	lastTime = clock();
-	deltaTime /= CLOCKS_PER_SEC;
-	timeDown -= deltaTime;
 }
 
 void Player::SetNewAnimation(int _animation)
@@ -48,6 +135,7 @@ void Player::SetNewAnimation(int _animation)
 	objectSpriteRect.y = (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * PLAYER::Y_SPRITE_POSITION;
 	lastAnimation = _animation;
 	timeDown = 0.15f;
+	lastTime = clock();
 }
 
 void Player::SetInitialPosition(int _x, int _y)
@@ -185,13 +273,12 @@ void Player::Move()
 
 void Player::Respawn()
 {
-	objectRect.x = initialPosition.x * SIZE;
-	objectRect.y = initialPosition.y * SIZE;
-	actualPosition.x = initialPosition.x;
-	actualPosition.y = initialPosition.y;
-	lives--;
-	direction = PLAYER_INITIAL_INFO::DIRECTION;
-	SetNewAnimation(PLAYER::X_LEFT_CLOSE_SPRITE);
+	direction = -1;
+	lastAnimationY = PLAYER::Y_DYING_1;
+	lastAnimation = PLAYER::X_DYING_6;
+	timeDown = 0.15f;
+	lastTime = clock();
+	dying = true;
 }
 
 void Player::Draw()

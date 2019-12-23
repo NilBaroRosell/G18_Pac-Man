@@ -6,9 +6,13 @@ class Player : public Object
 private:
 	int velocity;
 	int lastAnimation;
+	int lastAnimationY;
 	float deltaTime;
 	clock_t lastTime;
 	float timeDown;
+	bool dying;
+	void NextDyingAnimation();
+	void SetNewAnimation(int _animationX, int _animationY);
 public:
 	int score;
 	int lives;

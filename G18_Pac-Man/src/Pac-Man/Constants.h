@@ -113,6 +113,16 @@ namespace PLAYER
 	const int X_LEFT_OPEN_SPRITE = 6;
 	const int X_LEFT_CLOSE_SPRITE = 7;
 	const int Y_SPRITE_POSITION = 0;
+	const int X_DYING_1 = 0;
+	const int X_DYING_2 = 1;
+	const int X_DYING_3 = 2;
+	const int X_DYING_4 = 3;
+	const int X_DYING_5 = 4;
+	const int X_DYING_6 = 5;
+	const int X_DYING_7 = 6;
+	const int X_DYING_8 = 7;	
+	const int Y_DYING_1 = 4;
+	const int Y_DYING_2 = 5;
 }
 
 namespace BLINKY

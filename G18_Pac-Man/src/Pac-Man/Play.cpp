@@ -138,11 +138,12 @@ void Play::Update(bool * _keys, Vec2 _mousePosition)
 		case RUNNING_PLAY:
 			if (_keys[(int)InputKey::K_P])
 			{
+				system("CLS");
 				for (int i = 0; i < sizeX; i++)
 				{
 					for (int j = 0; j < sizeY; j++)
 					{
-						std::cout << map[j][i];
+						std::cout << ghostsMap[j][i];
 					}
 					std::cout << std::endl;
 				}
@@ -498,7 +499,18 @@ void Play::CheckLeft()
 	}
 	else
 	{
-		player.Move();
+		if (player.direction != player.lastDirection)
+		{
+			if (player.objectRect.x % SIZE <= 1)
+			{
+				player.Move();
+				player.objectRect.y = player.actualPosition.y * SIZE;
+			}
+		}
+		else
+		{
+			player.Move();
+		}
 
 		if (player.objectRect.x % SIZE == 3)
 		{
@@ -548,8 +560,6 @@ void Play::CheckLeft()
 			player.actualPosition.x--;
 		}
 	}
-
-	if(player.objectRect.y != player.actualPosition.y * SIZE) player.objectRect.y = player.actualPosition.y * SIZE;
 }
 
 void Play::CheckRight()
@@ -563,7 +573,18 @@ void Play::CheckRight()
 	}
 	else
 	{
-		player.Move();
+		if (player.direction != player.lastDirection)
+		{
+			if (player.objectRect.x % SIZE <= SIZE - 1)
+			{
+				player.Move();
+				player.objectRect.y = player.actualPosition.y * SIZE;
+			}
+		}
+		else
+		{
+			player.Move();
+		}
 
 		if (player.objectRect.x % SIZE == SIZE - 3)
 		{
@@ -614,8 +635,6 @@ void Play::CheckRight()
 			player.actualPosition.x++;
 		}
 	}
-
-	if (player.objectRect.y != player.actualPosition.y) player.objectRect.y = player.actualPosition.y * SIZE;
 }
 
 void Play::CheckUp()
@@ -629,7 +648,18 @@ void Play::CheckUp()
 	}
 	else
 	{
-		player.Move();
+		if (player.direction != player.lastDirection)
+		{
+			if (player.objectRect.y % SIZE <= 1)
+			{
+				player.Move();
+				player.objectRect.x = player.actualPosition.x * SIZE;
+			}
+		}
+		else
+		{
+			player.Move();
+		}
 
 		if (player.objectRect.y % SIZE == 3)
 		{
@@ -680,8 +710,6 @@ void Play::CheckUp()
 			player.actualPosition.y--;
 		}
 	}
-
-	if (player.objectRect.x != player.actualPosition.x * SIZE) player.objectRect.x = player.actualPosition.x * SIZE;
 }
 
 void Play::CheckDown()
@@ -695,7 +723,19 @@ void Play::CheckDown()
 	}
 	else
 	{
-		player.Move();
+		if (player.direction != player.lastDirection)
+		{
+			if (player.objectRect.y % SIZE <= SIZE - 1)
+			{
+				player.Move();
+				player.objectRect.x = player.actualPosition.x * SIZE;
+			}
+		}
+		else
+		{
+			player.Move();
+		}
+		
 		if (player.objectRect.y % SIZE == SIZE - 3)
 		{
 			map[player.actualPosition.x][player.actualPosition.y] = ' ';
@@ -745,8 +785,6 @@ void Play::CheckDown()
 			player.actualPosition.y++;
 		}
 	}
-
-	if (player.objectRect.x != player.actualPosition.x * SIZE) player.objectRect.x = player.actualPosition.x * SIZE;
 }
 
 void Play::PlayerDead()
@@ -910,40 +948,37 @@ void Play::CheckGhostsCollisions()
 	switch (inky.direction)
 	{
 		case 0:
-			if (inky.objectRect.x <= 1)
+			if (inky.objectRect.x <= 3)
 			{
 				if (ghostsMap[sizeX - 1][inky.actualPosition.y] != 'W')
 				{
-					if(powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+					if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
 					else inky.Move(INKY_INITIAL_INFO::VELOCITY);
 				}
 			}
-			else if (ghostsMap[inky.actualPosition.x - 1][inky.actualPosition.y] != 'W')
+			else if(ghostsMap[inky.actualPosition.x - 1][inky.actualPosition.y] != 'W')
 			{
-				if (powerUpEffect)
+				if (inky.direction != inky.lastDirection)
 				{
-					inky.Move(POWER_UP_INFO::VELOCITY);
-					if (inky.objectRect.x % SIZE == 1)
+					if (inky.objectRect.x % SIZE <= 1)
 					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.x--;
-						inky.actualPosition.x--;
+						if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+						else inky.Move(INKY_INITIAL_INFO::VELOCITY);
 					}
 				}
 				else
 				{
-					inky.Move(INKY_INITIAL_INFO::VELOCITY);
-					if (inky.objectRect.x % SIZE == 1)
-					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.x--;
-						inky.actualPosition.x--;
-					}
+					if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+					else inky.Move(INKY_INITIAL_INFO::VELOCITY);
+				}
+				inky.objectRect.y = inky.actualPosition.y * SIZE;
+				if (inky.objectRect.x % SIZE == 1)
+				{
+					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
+					inky.objectRect.x--;
+					inky.actualPosition.x--;
 				}
 			}
-
-			if (inky.objectRect.y != inky.actualPosition.y * SIZE) inky.objectRect.y = inky.actualPosition.y * SIZE;
-			
 			break;
 		case 1:
 			if (inky.objectRect.x >= SIZE * 19 - 1)
@@ -956,33 +991,30 @@ void Play::CheckGhostsCollisions()
 			}
 			else if (ghostsMap[inky.actualPosition.x + 1][inky.actualPosition.y] != 'W')
 			{
-				if (powerUpEffect)
+				if (inky.direction != inky.lastDirection)
 				{
-					inky.Move(POWER_UP_INFO::VELOCITY);
-					if (inky.objectRect.x % SIZE == SIZE - 1)
+					if (inky.objectRect.x % SIZE >= SIZE - 1)
 					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.x++;
-						inky.actualPosition.x++;
+						if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+						else inky.Move(INKY_INITIAL_INFO::VELOCITY);
 					}
 				}
 				else
 				{
-					inky.Move(INKY_INITIAL_INFO::VELOCITY);
-					if (inky.objectRect.x % SIZE == SIZE - 1)
-					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.x++;
-						inky.actualPosition.x++;
-					}
+					if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+					else inky.Move(INKY_INITIAL_INFO::VELOCITY);
+				}
+				inky.objectRect.y = inky.actualPosition.y * SIZE;
+				if (inky.objectRect.x % SIZE == SIZE - 1)
+				{
+					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
+					inky.objectRect.x++;
+					inky.actualPosition.x++;
 				}
 			}
-
-			if (inky.objectRect.y != inky.actualPosition.y * SIZE) inky.objectRect.y = inky.actualPosition.y * SIZE;
-
 			break;
 		case 2:
-			if (inky.objectRect.y <= 1)
+			if (inky.objectRect.y <= 3)
 			{
 				if (ghostsMap[inky.actualPosition.x][sizeY - 1] != 'W')
 				{
@@ -992,30 +1024,27 @@ void Play::CheckGhostsCollisions()
 			}
 			else if (ghostsMap[inky.actualPosition.x][inky.actualPosition.y - 1] != 'W')
 			{
-				if (powerUpEffect)
+				if (inky.direction != inky.lastDirection)
 				{
-					inky.Move(POWER_UP_INFO::VELOCITY);
-					if (inky.objectRect.y % SIZE == 1)
+					if (inky.objectRect.y % SIZE <= 1)
 					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.y--;
-						inky.actualPosition.y--;
+						if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+						else inky.Move(INKY_INITIAL_INFO::VELOCITY);
 					}
 				}
 				else
 				{
-					inky.Move(INKY_INITIAL_INFO::VELOCITY);
-					if (inky.objectRect.y % SIZE == 1)
-					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.y--;
-						inky.actualPosition.y--;
-					}
+					if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+					else inky.Move(INKY_INITIAL_INFO::VELOCITY);
+				}
+				inky.objectRect.x = inky.actualPosition.x * SIZE;
+				if (inky.objectRect.y % SIZE == 1)
+				{
+					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
+					inky.objectRect.y--;
+					inky.actualPosition.y--;
 				}
 			}
-
-			if (inky.objectRect.x != inky.actualPosition.x * SIZE) inky.objectRect.x = inky.actualPosition.x * SIZE;
-
 			break;
 		case 3:
 			if (inky.objectRect.y >= SIZE * 19 - 1)
@@ -1028,30 +1057,27 @@ void Play::CheckGhostsCollisions()
 			}
 			else if (ghostsMap[inky.actualPosition.x][inky.actualPosition.y + 1] != 'W')
 			{
-				if (powerUpEffect)
+				if (inky.direction != inky.lastDirection)
 				{
-					inky.Move(POWER_UP_INFO::VELOCITY);
-					if (inky.objectRect.y % SIZE == SIZE - 1)
+					if (inky.objectRect.y % SIZE >= SIZE - 1)
 					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.y++;
-						inky.actualPosition.y++;
+						if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+						else inky.Move(INKY_INITIAL_INFO::VELOCITY);
 					}
 				}
 				else
 				{
-					inky.Move(INKY_INITIAL_INFO::VELOCITY);
-					if (inky.objectRect.y % SIZE == SIZE - 1)
-					{
-						ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-						inky.objectRect.y++;
-						inky.actualPosition.y++;
-					}
+					if (powerUpEffect) inky.Move(POWER_UP_INFO::VELOCITY);
+					else inky.Move(INKY_INITIAL_INFO::VELOCITY);
+				}
+				inky.objectRect.x = inky.actualPosition.x * SIZE;
+				if (inky.objectRect.y % SIZE == SIZE - 1)
+				{
+					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
+					inky.objectRect.y++;
+					inky.actualPosition.y++;
 				}
 			}
-
-			if (inky.objectRect.x != inky.actualPosition.x * SIZE) inky.objectRect.x = inky.actualPosition.x * SIZE;
-
 			break;
 		default:
 			break;
@@ -1062,7 +1088,7 @@ void Play::CheckGhostsCollisions()
 	switch (clyde.direction)
 	{
 	case 0:
-		if (clyde.objectRect.x <= 1)
+		if (clyde.objectRect.x <= 3)
 		{
 			if (ghostsMap[sizeX - 1][clyde.actualPosition.y] != 'W')
 			{
@@ -1072,30 +1098,27 @@ void Play::CheckGhostsCollisions()
 		}
 		else if (ghostsMap[clyde.actualPosition.x - 1][clyde.actualPosition.y] != 'W')
 		{
-			if (powerUpEffect)
+			if (clyde.direction != clyde.lastDirection)
 			{
-				clyde.Move(POWER_UP_INFO::VELOCITY);
-				if (clyde.objectRect.x % SIZE == 1)
+				if (clyde.objectRect.x % SIZE <= 1)
 				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.x--;
-					clyde.actualPosition.x--;
+					if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+					else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
 				}
 			}
 			else
 			{
-				clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
-				if (clyde.objectRect.x % SIZE == 1)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.x--;
-					clyde.actualPosition.x--;
-				}
+				if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+				else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
+			}
+			clyde.objectRect.y = clyde.actualPosition.y * SIZE;
+			if (clyde.objectRect.x % SIZE == 1)
+			{
+				ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
+				clyde.objectRect.x--;
+				clyde.actualPosition.x--;
 			}
 		}
-
-		if (clyde.objectRect.y != clyde.actualPosition.y * SIZE) clyde.objectRect.y = clyde.actualPosition.y * SIZE;
-
 		break;
 	case 1:
 		if (clyde.objectRect.x >= SIZE * 19 - 1)
@@ -1108,33 +1131,30 @@ void Play::CheckGhostsCollisions()
 		}
 		else if (ghostsMap[clyde.actualPosition.x + 1][clyde.actualPosition.y] != 'W')
 		{
-			if (powerUpEffect)
+			if (clyde.direction != clyde.lastDirection)
 			{
-				clyde.Move(POWER_UP_INFO::VELOCITY);
-				if (clyde.objectRect.x % SIZE == SIZE - 1)
+				if (clyde.objectRect.x % SIZE >= SIZE - 1)
 				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.x++;
-					clyde.actualPosition.x++;
+					if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+					else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
 				}
 			}
 			else
 			{
-				clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
-				if (clyde.objectRect.x % SIZE == SIZE - 1)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.x++;
-					clyde.actualPosition.x++;
-				}
+				if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+				else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
+			}
+			clyde.objectRect.y = clyde.actualPosition.y * SIZE;
+			if (clyde.objectRect.x % SIZE == SIZE - 1)
+			{
+				ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
+				clyde.objectRect.x++;
+				clyde.actualPosition.x++;
 			}
 		}
-
-		if (clyde.objectRect.y != clyde.actualPosition.y * SIZE) clyde.objectRect.y = clyde.actualPosition.y * SIZE;
-
 		break;
 	case 2:
-		if (clyde.objectRect.y <= 1)
+		if (clyde.objectRect.y <= 3)
 		{
 			if (ghostsMap[clyde.actualPosition.x][sizeY - 1] != 'W')
 			{
@@ -1144,30 +1164,27 @@ void Play::CheckGhostsCollisions()
 		}
 		else if (ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y - 1] != 'W')
 		{
-			if (powerUpEffect)
+			if (clyde.direction != clyde.lastDirection)
 			{
-				clyde.Move(POWER_UP_INFO::VELOCITY);
-				if (clyde.objectRect.y % SIZE == 1)
+				if (clyde.objectRect.y % SIZE <= 1)
 				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.y--;
-					clyde.actualPosition.y--;
+					if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+					else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
 				}
 			}
 			else
 			{
-				clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
-				if (clyde.objectRect.y % SIZE == 1)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.y--;
-					clyde.actualPosition.y--;
-				}
+				if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+				else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
+			}
+			clyde.objectRect.x = clyde.actualPosition.x * SIZE;
+			if (clyde.objectRect.y % SIZE == 1)
+			{
+				ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
+				clyde.objectRect.y--;
+				clyde.actualPosition.y--;
 			}
 		}
-
-		if (clyde.objectRect.x != clyde.actualPosition.x * SIZE) clyde.objectRect.x = clyde.actualPosition.x * SIZE;
-
 		break;
 	case 3:
 		if (clyde.objectRect.y >= SIZE * 19 - 1)
@@ -1180,30 +1197,27 @@ void Play::CheckGhostsCollisions()
 		}
 		else if (ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y + 1] != 'W')
 		{
-			if (powerUpEffect)
+			if (clyde.direction != clyde.lastDirection)
 			{
-				clyde.Move(POWER_UP_INFO::VELOCITY);
-				if (clyde.objectRect.y % SIZE == SIZE - 1)
+				if (clyde.objectRect.y % SIZE >= SIZE - 1)
 				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.y++;
-					clyde.actualPosition.y++;
+					if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+					else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
 				}
 			}
 			else
 			{
-				clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
-				if (clyde.objectRect.y % SIZE == SIZE - 1)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.objectRect.y++;
-					clyde.actualPosition.y++;
-				}
+				if (powerUpEffect) clyde.Move(POWER_UP_INFO::VELOCITY);
+				else clyde.Move(CLYDE_INITIAL_INFO::VELOCITY);
+			}
+			clyde.objectRect.x = clyde.actualPosition.x * SIZE;
+			if (clyde.objectRect.y % SIZE == SIZE - 1)
+			{
+				ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
+				clyde.objectRect.y++;
+				clyde.actualPosition.y++;
 			}
 		}
-
-		if (clyde.objectRect.x != clyde.actualPosition.x * SIZE) clyde.objectRect.x = clyde.actualPosition.x * SIZE;
-
 		break;
 	default:
 		break;
