@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClCompile Include="Blinky.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Cherry.cpp" />
     <ClCompile Include="Clyde.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="Ghost.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Orange.cpp" />
     <ClCompile Include="Play.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Point.cpp" />
@@ -181,10 +183,12 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
+    <ClCompile Include="Strawberry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blinky.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Cherry.h" />
     <ClInclude Include="Clyde.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameController.h" />
@@ -195,6 +199,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Orange.h" />
     <ClInclude Include="Play.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point.h" />
@@ -203,6 +208,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="Strawberry.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -38,6 +38,18 @@ void Clyde::Update(bool* _keys)
 		deltaTime /= CLOCKS_PER_SEC;
 		timeDown -= deltaTime;
 	}
+	else
+	{
+		deltaTimeRespawn = (clock() - lastTimeRespawn);
+		lastTimeRespawn = clock();
+		deltaTimeRespawn /= CLOCKS_PER_SEC;
+		timeDownRespawn -= deltaTimeRespawn;
+		if (timeDownRespawn <= 0)
+		{
+			direction = CLYDE_INITIAL_INFO::DIRECTION;
+			dead = false;
+		}
+	}
 }
 
 void Clyde::Move(int _velocity)
@@ -178,7 +190,11 @@ void Clyde::Respawn()
 	objectRect.y = initialPosition.y * SIZE;
 	actualPosition.x = initialPosition.x;
 	actualPosition.y = initialPosition.y;
-	direction = CLYDE_INITIAL_INFO::DIRECTION;
+	direction = -1;
+	dead = true;
+	timeDownRespawn = 2.0f;
+	lastTimeRespawn = clock();
+	SetNewAnimation(CLYDE::X_LEFT_OPEN_SPRITE);
 }
 
 void Clyde::Draw()

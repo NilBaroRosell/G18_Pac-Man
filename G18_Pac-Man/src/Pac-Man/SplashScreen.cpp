@@ -31,6 +31,11 @@ void SplashScreen::Update(bool * _keys, Vec2 _mousePosition)
 	}
 }
 
+PlayerRankingInfo SplashScreen::GetPlayerRankingInfo()
+{
+	return { NULL, NULL };
+}
+
 void SplashScreen::Draw()
 {
 	Renderer::Instance()->Clear();

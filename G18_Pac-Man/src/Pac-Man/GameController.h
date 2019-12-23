@@ -15,10 +15,12 @@ private:
 public:
 	bool isRunning;
 	GameStates gameState;
+	PlayerRankingInfo newPlayerRankingInfo;
 	GameController();
 	void GoMenu();
 	void GoPlay();
-	void GoRanking();
+	void GoRankingAfterPlay();
+	void GoRankingAfterMenu();
 	void Run();
 	void Draw();
 	~GameController();

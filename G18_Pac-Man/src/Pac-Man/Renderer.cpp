@@ -51,6 +51,11 @@ Renderer::Renderer()
 	Text exitButtonHover{ EXIT_BUTTON::HOVER_ID, EXIT_BUTTON::HOVER_TEXT, EXIT_BUTTON::COLOR, EXIT_BUTTON::W, EXIT_BUTTON::H };
 	LoadTextureText(menuFont.id, exitButtonHover);
 
+	Text backButton{ BACK_BUTTON::ID, BACK_BUTTON::TEXT, BACK_BUTTON::COLOR, BACK_BUTTON::W, BACK_BUTTON::H };
+	LoadTextureText(menuFont.id, backButton);
+	Text backButtonHover{ BACK_BUTTON::HOVER_ID, BACK_BUTTON::HOVER_TEXT, BACK_BUTTON::COLOR, BACK_BUTTON::W, BACK_BUTTON::H };
+	LoadTextureText(menuFont.id, backButtonHover);
+
 	Text Score0{ SCORE_0::ID, SCORE_0::TEXT, SCORE_0::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
 	LoadTextureText(playFont.id, Score0);
 	Text Score1{ SCORE_1::ID, SCORE_1::TEXT, SCORE_1::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
@@ -71,6 +76,8 @@ Renderer::Renderer()
 	LoadTextureText(playFont.id, Score8);
 	Text Score9{ SCORE_9::ID, SCORE_9::TEXT, SCORE_9::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
 	LoadTextureText(playFont.id, Score9);
+	Text ScoreX{ SCORE_X::ID, SCORE_X::TEXT, SCORE_X::COLOR, HUD_INFO::SCORE_W, HUD_INFO::SCORE_H };
+	LoadTextureText(playFont.id, ScoreX);
 
 	Text Spcae_Start1{ PRESS_SPACE1::ID, PRESS_SPACE1::TEXT, PRESS_SPACE1::COLOR, PRESS_SPACE1::W, PRESS_SPACE1::H };
 	LoadTextureText(menuFont.id, Spcae_Start1);

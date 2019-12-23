@@ -21,11 +21,18 @@ void GameController::GoPlay()
 	actualScene = new Play();
 }
 
-void GameController::GoRanking()
+void GameController::GoRankingAfterMenu()
 {
 	gameState = GameStates::RANKING;
 	delete actualScene;
 	actualScene = new Ranking();
+}
+
+void GameController::GoRankingAfterPlay()
+{
+	gameState = GameStates::RANKING;
+	delete actualScene;
+	actualScene = new Ranking(newPlayerRankingInfo);
 }
 
 void GameController::Run()
@@ -49,7 +56,7 @@ void GameController::Run()
 			}
 			if (actualScene->state == SceneStates::RANKING_MENU)
 			{
-				GoRanking();
+				GoRankingAfterMenu();
 			}
 			if (actualScene->state == SceneStates::EXIT_MENU)
 			{
@@ -59,7 +66,8 @@ void GameController::Run()
 		case GameStates::PLAY:
 			if (actualScene->state == SceneStates::GAME_OVER_PLAY)
 			{
-				GoMenu();
+				newPlayerRankingInfo = actualScene->GetPlayerRankingInfo();
+				GoRankingAfterPlay();
 			}
 			break;
 		case GameStates::RANKING:

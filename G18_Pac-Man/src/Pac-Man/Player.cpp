@@ -191,6 +191,7 @@ void Player::Respawn()
 	actualPosition.y = initialPosition.y;
 	lives--;
 	direction = PLAYER_INITIAL_INFO::DIRECTION;
+	SetNewAnimation(PLAYER::X_LEFT_CLOSE_SPRITE);
 }
 
 void Player::Draw()

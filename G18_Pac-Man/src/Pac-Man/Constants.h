@@ -76,6 +76,19 @@ namespace EXIT_BUTTON
 	const int Y = 475;
 }
 
+namespace BACK_BUTTON
+{
+	const std::string ID = "BackButton";
+	const std::string TEXT = "BACK";
+	const std::string HOVER_ID = "BackButtonHover";
+	const std::string HOVER_TEXT = "back";
+	const Color COLOR = Color(255, 0, 0, 255);
+	const int W = 125;
+	const int H = 50;
+	const int X = 395;
+	const int Y = 475;
+}
+
 namespace PACMAN_SPRITESHEET
 {
 	const std::string ID = "PacmanSpritesheet";
@@ -159,6 +172,24 @@ namespace POINT
 	const int Y_SPRITE_POSITION = 6;
 }
 
+namespace STRAWBERRY
+{
+	const int X_SPRITE_POSITION = 1;
+	const int Y_SPRITE_POSITION = 6;
+}
+
+namespace CHERRY
+{
+	const int X_SPRITE_POSITION = 0;
+	const int Y_SPRITE_POSITION = 6;
+}
+
+namespace ORANGE
+{
+	const int X_SPRITE_POSITION = 2;
+	const int Y_SPRITE_POSITION = 6;
+}
+
 namespace PLAYER_INITIAL_INFO
 {
 	const int DIRECTION = 0;
@@ -176,6 +207,21 @@ namespace POWERUP_DATA
 namespace POINT_DATA
 {
 	const int POINTS = 1;
+}
+
+namespace STRAWBERRY_DATA
+{
+	const int POINTS = 15;
+}
+
+namespace CHERRY_DATA
+{
+	const int POINTS = 10;
+}
+
+namespace ORANGE_DATA
+{
+	const int POINTS = 20;
 }
 
 namespace BLINKY_INITIAL_INFO
@@ -238,6 +284,25 @@ namespace HUD_INFO
 	const int Y_TRANSPARENT = 7;
 	const int X_NULL = 3;
 	const int Y_NULL = 6;
+	const int INITIAL_MULTIPLIER_X = 780;
+	const int INITIAL_FRUITS_COUNT_X = 820;
+	const int INITIAL_STRAWBERRY_COUNT_Y = 266;
+	const int INITIAL_CHERRY_COUNT_Y = 201;
+	const int INITIAL_ORANGE_COUNT_Y = 331;
+	const int INITIAL_STRAWBERRY_MULTIPLIER_Y = 270;
+	const int INITIAL_CHERRY_MULTIPLIER_Y = 205;
+	const int INITIAL_ORANGE_MULTIPLIER_Y = 335;
+	const int MULTIPLIER_X_SIZE = 42;
+	const int MULTIPLIER_Y_SIZE = 70;
+}
+
+namespace RANKING_INFO
+{
+	const Color COLOR = Color(200, 200, 200, 255);
+	const int INITIAL_HEIGHT = 100;
+	const int INITIAL_WIDTH = 375;
+	const int WIDTH = 150;
+	const int HEIGHT = 40;
 }
 
 namespace SCORE_0
@@ -307,6 +372,13 @@ namespace SCORE_9
 {
 	const std::string ID = "SCORE_9";
 	const std::string TEXT = "9";
+	const Color COLOR = Color(0, 0, 0, 255);
+}
+
+namespace SCORE_X
+{
+	const std::string ID = "SCORE_X";
+	const std::string TEXT = "X";
 	const Color COLOR = Color(0, 0, 0, 255);
 }
 

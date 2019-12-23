@@ -9,6 +9,11 @@ Play::Play()
 	ReadConfig();
 	state = SceneStates::START_GAME_PLAY;
 	powerUpEffect = false;
+	fruitTimeDown = 10.0f;
+	fruitLastTime = clock();
+	lastFruits[0] = 0;
+	lastFruits[1] = 0;
+	createFruit = true;
 }
 
 void Play::ReadConfig()
@@ -91,7 +96,7 @@ void Play::ReadConfig()
 	for (pNodeI = pNodeI->next_sibling()->first_node(); pNodeI; pNodeI = pNodeI->next_sibling())
 	{
 		pAttr = pNodeI->first_attribute();
-		map[std::atoi(pAttr->value()) - 1][std::atoi(pAttr->next_attribute()->value()) - 1] = 'O';
+		map[std::atoi(pAttr->value()) - 1][std::atoi(pAttr->next_attribute()->value()) - 1] = 'o';
 	}
 
 	//walls
@@ -133,8 +138,7 @@ void Play::Update(bool * _keys, Vec2 _mousePosition)
 		case RUNNING_PLAY:
 			if (_keys[(int)InputKey::K_P])
 			{
-				std::cout << powerUpEffect << std::endl;
-				/*for (int i = 0; i < sizeX; i++)
+				for (int i = 0; i < sizeX; i++)
 				{
 					for (int j = 0; j < sizeY; j++)
 					{
@@ -143,16 +147,6 @@ void Play::Update(bool * _keys, Vec2 _mousePosition)
 					std::cout << std::endl;
 				}
 				std::cout << std::endl;
-
-				for (int i = 0; i < sizeX; i++)
-				{
-					for (int j = 0; j < sizeY; j++)
-					{
-						std::cout << ghostsMap[j][i];
-					}
-					std::cout << std::endl;
-				}
-				std::cout << std::endl;*/
 				/*state = PAUSED_PLAY;
 				hud.EnablePause();*/
 			}
@@ -163,6 +157,7 @@ void Play::Update(bool * _keys, Vec2 _mousePosition)
 				inky.Update(_keys);
 				clyde.Update(_keys);
 				player.Update(_keys);
+				hud.Update();
 				CheckGhostsCollisions();
 				CheckPlayerCollisions();
 				if (powerUpEffect)
@@ -173,8 +168,47 @@ void Play::Update(bool * _keys, Vec2 _mousePosition)
 					powerTimeDown -= powerDeltaTime;
 				}
 				if (powerTimeDown <= 0) powerUpEffect = false;
-				if(player.lives <= 0) state = GAME_OVER_PLAY;
-				if(CheckGameOver()) state = GAME_OVER_PLAY;
+				fruitDeltaTime = (clock() - fruitLastTime);
+				fruitLastTime = clock();
+				fruitDeltaTime /= CLOCKS_PER_SEC;
+				fruitTimeDown -= fruitDeltaTime;
+				if (fruitTimeDown <= 0 && createFruit)
+				{
+					if (player.actualPosition.x == player.initialPosition.x && player.actualPosition.y == player.initialPosition.y)
+					{
+						fruitTimeDown = 2.0f;
+						createFruit = true;
+					}
+					else
+					{
+						GetRandomFruit();
+						switch (lastFruits[1])
+						{
+						case 1:
+							map[player.initialPosition.x][player.initialPosition.y] = 'S';
+							break;
+						case 2:
+							map[player.initialPosition.x][player.initialPosition.y] = 'C';
+							break;
+						case 3:
+							map[player.initialPosition.x][player.initialPosition.y] = 'O';
+							break;
+						default:
+							break;
+						}
+						createFruit = false;
+					}
+				}
+				if (player.lives <= 0)
+				{
+					state = GAME_OVER_PLAY;
+					std::cout << "Please, enter your name here: ";
+				}
+				if (CheckGameOver())
+				{
+					state = GAME_OVER_PLAY;
+					std::cout << "Please, enter your name here: ";
+				}
 			}
 			break;
 		case PAUSED_PLAY:
@@ -241,12 +275,37 @@ void Play::CheckBlinkyDirections()
 	}
 }
 
+int Play::GetRandomNum()
+{
+	return rand() % 3 + 1;
+}
+
+void Play::GetRandomFruit()
+{
+	if (lastFruits[0] == 0 || lastFruits[0] != lastFruits[1])
+	{
+		lastFruits[0] = lastFruits[1];
+		lastFruits[1] = GetRandomNum(); 
+	}
+	else
+	{
+		while (true)
+		{
+			lastFruits[1] = GetRandomNum();
+			if (lastFruits[1] != lastFruits[0])
+			{
+				break;
+			}
+		}
+	}
+}
+
 void Play::CheckPlayerCollisions()
 {
 	switch (player.direction)
 	{
 		case 0:
-			if (player.objectRect.x <= 1)
+			if (player.objectRect.x <= 3)
 			{
 				CheckLeft();
 			}
@@ -254,12 +313,14 @@ void Play::CheckPlayerCollisions()
 			{
 				CheckLeft();
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
+			
+			if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
 			{
 				if (powerUpEffect)
 				{
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
 					blinky.Respawn();
+					player.AddPoints(blinky.points);
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
 				}
 				else PlayerDead();
@@ -270,6 +331,7 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
 					inky.Respawn();
+					player.AddPoints(inky.points);
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
 				}
 				else PlayerDead();
@@ -280,13 +342,14 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
 					clyde.Respawn();
+					player.AddPoints(clyde.points);
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'C';
 				}
 				else PlayerDead();
 			}
 			break;
 		case 1:
-			if (player.objectRect.x >=  SIZE * 19 - 1)
+			if (player.objectRect.x >=  SIZE * 19 - 3)
 			{
 				CheckRight();
 			}
@@ -294,15 +357,16 @@ void Play::CheckPlayerCollisions()
 			{
 				CheckRight();
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
+			
+			if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
 			{
 				if (powerUpEffect)
 				{
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
 					blinky.Respawn();
+					player.AddPoints(blinky.points);
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
 				}
-				else PlayerDead();
 			}
 			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'I')
 			{
@@ -310,6 +374,7 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
 					inky.Respawn();
+					player.AddPoints(inky.points);
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
 				}
 				else PlayerDead();
@@ -320,13 +385,14 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
 					clyde.Respawn();
+					player.AddPoints(clyde.points);
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'C';
 				}
 				else PlayerDead();
 			}
 			break;
 		case 2:
-			if (player.objectRect.y <= 1)
+			if (player.objectRect.y <= 3)
 			{
 				CheckUp();
 			}
@@ -334,12 +400,14 @@ void Play::CheckPlayerCollisions()
 			{
 				CheckUp();
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
+			
+			if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
 			{
 				if (powerUpEffect)
 				{
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
 					blinky.Respawn();
+					player.AddPoints(blinky.points);
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
 				}
 				else PlayerDead();
@@ -350,6 +418,7 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
 					inky.Respawn();
+					player.AddPoints(inky.points);
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
 				}
 				else PlayerDead();
@@ -360,13 +429,14 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
 					clyde.Respawn();
+					player.AddPoints(clyde.points);
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'C';
 				}
 				else PlayerDead();
 			}
 			break;
 		case 3:
-			if (player.objectRect.y >= SIZE * 19 - 1)
+			if (player.objectRect.y >= SIZE * 19 - 3)
 			{
 				CheckDown();
 			}
@@ -374,12 +444,14 @@ void Play::CheckPlayerCollisions()
 			{
 				CheckDown();
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
+			
+			if (ghostsMap[player.actualPosition.x][player.actualPosition.y] == 'B')
 			{
 				if (powerUpEffect)
 				{
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
 					blinky.Respawn();
+					player.AddPoints(blinky.points);
 					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
 				}
 				else PlayerDead();
@@ -390,6 +462,7 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
 					inky.Respawn();
+					player.AddPoints(inky.points);
 					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
 				}
 				else PlayerDead();
@@ -400,6 +473,7 @@ void Play::CheckPlayerCollisions()
 				{
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
 					clyde.Respawn();
+					player.AddPoints(clyde.points);
 					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'C';
 				}
 				else PlayerDead();
@@ -409,12 +483,13 @@ void Play::CheckPlayerCollisions()
 			break;
 	}	
 
+	map[player.actualPosition.x][player.actualPosition.y] = 'X';
 	player.lastDirection = player.direction;
 }
 
 void Play::CheckLeft()
 {
-	if (player.objectRect.x <= 1)
+	if (player.objectRect.x <= 3)
 	{
 		if (map[sizeX-1][player.actualPosition.y] != 'W')
 		{
@@ -425,67 +500,61 @@ void Play::CheckLeft()
 	{
 		player.Move();
 
-		if (player.objectRect.x % SIZE == 1)
+		if (player.objectRect.x % SIZE == 3)
 		{
 			map[player.actualPosition.x][player.actualPosition.y] = ' ';
 			player.objectRect.x--;
+			if (map[player.actualPosition.x - 1][player.actualPosition.y] == 'P')
+			{
+				player.AddPoints(POINT_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
+			}
+			if (map[player.actualPosition.x - 1][player.actualPosition.y] == 'o')
+			{
+				player.AddPoints(POWERUP_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
+				powerUpEffect = true;
+				powerLastTime = clock();
+				powerTimeDown = 10;
+			}
+			if (map[player.actualPosition.x - 1][player.actualPosition.y] == 'S')
+			{
+				player.AddPoints(STRAWBERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.strawberryCount < 9) hud.strawberryCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
+			if (map[player.actualPosition.x - 1][player.actualPosition.y] == 'C')
+			{
+				player.AddPoints(CHERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.cherryCount < 9) hud.cherryCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
+			if (map[player.actualPosition.x - 1][player.actualPosition.y] == 'O')
+			{
+				player.AddPoints(ORANGE_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.orangeCount < 9) hud.orangeCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
 
-			if (ghostsMap[player.actualPosition.x - 1][player.actualPosition.y] == 'B')
-			{
-				if (powerUpEffect)
-				{
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
-					blinky.Respawn();
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
-			}
-			else if (ghostsMap[player.actualPosition.x - 1][player.actualPosition.y] == 'I')
-			{
-				if (powerUpEffect)
-				{
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-					inky.Respawn();
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
-				}
-				else PlayerDead();
-			}
-			else if (ghostsMap[player.actualPosition.x - 1][player.actualPosition.y] == 'C')
-			{
-				if (powerUpEffect)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.Respawn();
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
-			}
-			else
-			{
-				if (map[player.actualPosition.x - 1][player.actualPosition.y] == 'P')
-				{
-					player.AddPoints(POINT_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-				}
-				if (map[player.actualPosition.x - 1][player.actualPosition.y] == 'O')
-				{
-					player.AddPoints(POWERUP_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-					powerUpEffect = true;
-					powerLastTime = clock();
-					powerTimeDown = 10;
-				}
-
-				player.actualPosition.x--;
-				map[player.actualPosition.x][player.actualPosition.y] = 'X';
-			}
+			player.actualPosition.x--;
 		}
 	}
+
+	if(player.objectRect.y != player.actualPosition.y * SIZE) player.objectRect.y = player.actualPosition.y * SIZE;
 }
 
 void Play::CheckRight()
 {
-	if (player.objectRect.x >= SIZE * 19 - 1)
+	if (player.objectRect.x >= SIZE * 19 - 3)
 	{
 		if (map[0][player.actualPosition.y] != 'W')
 		{
@@ -496,67 +565,62 @@ void Play::CheckRight()
 	{
 		player.Move();
 
-		if (player.objectRect.x % SIZE == SIZE - 1)
+		if (player.objectRect.x % SIZE == SIZE - 3)
 		{
 			map[player.actualPosition.x][player.actualPosition.y] = ' ';
 			player.objectRect.x++;
 
-			if (ghostsMap[player.actualPosition.x + 1][player.actualPosition.y] == 'B')
+			if (map[player.actualPosition.x + 1][player.actualPosition.y] == 'P')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
-					blinky.Respawn();
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
+				player.AddPoints(POINT_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
 			}
-			else if (ghostsMap[player.actualPosition.x + 1][player.actualPosition.y] == 'I')
+			if (map[player.actualPosition.x + 1][player.actualPosition.y] == 'o')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-					inky.Respawn();
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
-				}
-				else PlayerDead();
+				player.AddPoints(POWERUP_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
+				powerUpEffect = true;
+				powerLastTime = clock();
+				powerTimeDown = 10;
 			}
-			else if (ghostsMap[player.actualPosition.x + 1][player.actualPosition.y] == 'C')
+			if (map[player.actualPosition.x + 1][player.actualPosition.y] == 'S')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.Respawn();
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
+				player.AddPoints(STRAWBERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.strawberryCount < 9) hud.strawberryCount++;
+				hud.UpdateScoreInfo(player.score);
 			}
-			else
+			if (map[player.actualPosition.x + 1][player.actualPosition.y] == 'C')
 			{
-				if (map[player.actualPosition.x + 1][player.actualPosition.y] == 'P')
-				{
-					player.AddPoints(POINT_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-				}
-				if (map[player.actualPosition.x + 1][player.actualPosition.y] == 'O')
-				{
-					player.AddPoints(POWERUP_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-					powerUpEffect = true;
-					powerLastTime = clock();
-					powerTimeDown = 10;
-				}
+				player.AddPoints(CHERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.cherryCount < 9) hud.cherryCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
+			if (map[player.actualPosition.x + 1][player.actualPosition.y] == 'O')
+			{
+				player.AddPoints(ORANGE_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.orangeCount < 9) hud.orangeCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
 
-				player.actualPosition.x++;
-				map[player.actualPosition.x][player.actualPosition.y] = 'X';
-			}
+			player.actualPosition.x++;
 		}
 	}
+
+	if (player.objectRect.y != player.actualPosition.y) player.objectRect.y = player.actualPosition.y * SIZE;
 }
 
 void Play::CheckUp()
 {
-	if (player.objectRect.y <= 1)
+	if (player.objectRect.y <= 3)
 	{
 		if (map[player.actualPosition.x][sizeY - 1] != 'W')
 		{
@@ -567,67 +631,62 @@ void Play::CheckUp()
 	{
 		player.Move();
 
-		if (player.objectRect.y % SIZE == 1)
+		if (player.objectRect.y % SIZE == 3)
 		{
 			map[player.actualPosition.x][player.actualPosition.y] = ' ';
 			player.objectRect.y--;
 
-			if (ghostsMap[player.actualPosition.x][player.actualPosition.y - 1] == 'B')
+			if (map[player.actualPosition.x][player.actualPosition.y - 1] == 'P')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
-					blinky.Respawn();
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
+				player.AddPoints(POINT_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y - 1] == 'I')
+			if (map[player.actualPosition.x][player.actualPosition.y - 1] == 'o')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-					inky.Respawn();
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
-				}
-				else PlayerDead();
+				player.AddPoints(POWERUP_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
+				powerUpEffect = true;
+				powerLastTime = clock();
+				powerTimeDown = 10;
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y - 1] == 'C')
+			if (map[player.actualPosition.x][player.actualPosition.y - 1] == 'S')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.Respawn();
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
+				player.AddPoints(STRAWBERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.strawberryCount < 9) hud.strawberryCount++;
+				hud.UpdateScoreInfo(player.score);
 			}
-			else
+			if (map[player.actualPosition.x][player.actualPosition.y - 1] == 'C')
 			{
-				if (map[player.actualPosition.x][player.actualPosition.y - 1] == 'P')
-				{
-					player.AddPoints(POINT_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-				}
-				if (map[player.actualPosition.x][player.actualPosition.y - 1] == 'O')
-				{
-					player.AddPoints(POWERUP_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-					powerUpEffect = true;
-					powerLastTime = clock();
-					powerTimeDown = 10;
-				}
+				player.AddPoints(CHERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.cherryCount < 9) hud.cherryCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
+			if (map[player.actualPosition.x][player.actualPosition.y - 1] == 'O')
+			{
+				player.AddPoints(ORANGE_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.orangeCount < 9) hud.orangeCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
 
-				player.actualPosition.y--;
-				map[player.actualPosition.x][player.actualPosition.y] = 'X';
-			}
+			player.actualPosition.y--;
 		}
 	}
+
+	if (player.objectRect.x != player.actualPosition.x * SIZE) player.objectRect.x = player.actualPosition.x * SIZE;
 }
 
 void Play::CheckDown()
 {
-	if (player.objectRect.y >= SIZE * 19 - 1)
+	if (player.objectRect.y >= SIZE * 19 - 3)
 	{
 		if (map[player.actualPosition.x][0] != 'W')
 		{
@@ -637,62 +696,57 @@ void Play::CheckDown()
 	else
 	{
 		player.Move();
-		if (player.objectRect.y % SIZE == SIZE - 1)
+		if (player.objectRect.y % SIZE == SIZE - 3)
 		{
 			map[player.actualPosition.x][player.actualPosition.y] = ' ';
 			player.objectRect.y++;
 
-			if (ghostsMap[player.actualPosition.x][player.actualPosition.y + 1] == 'B')
+			if (map[player.actualPosition.x][player.actualPosition.y + 1] == 'P')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = ' ';
-					blinky.Respawn();
-					ghostsMap[blinky.actualPosition.x][blinky.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
+				player.AddPoints(POINT_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y + 1] == 'I')
+			if (map[player.actualPosition.x][player.actualPosition.y + 1] == 'o')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = ' ';
-					inky.Respawn();
-					ghostsMap[inky.actualPosition.x][inky.actualPosition.y] = 'I';
-				}
-				else PlayerDead();
+				player.AddPoints(POWERUP_DATA::POINTS);
+				hud.UpdateScoreInfo(player.score);
+				powerUpEffect = true;
+				powerLastTime = clock();
+				powerTimeDown = 10;
 			}
-			else if (ghostsMap[player.actualPosition.x][player.actualPosition.y + 1] == 'C')
+			if (map[player.actualPosition.x][player.actualPosition.y + 1] == 'S')
 			{
-				if (powerUpEffect)
-				{
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = ' ';
-					clyde.Respawn();
-					ghostsMap[clyde.actualPosition.x][clyde.actualPosition.y] = 'B';
-				}
-				else PlayerDead();
+				player.AddPoints(STRAWBERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.strawberryCount < 9) hud.strawberryCount++;
+				hud.UpdateScoreInfo(player.score);
 			}
-			else
+			if (map[player.actualPosition.x][player.actualPosition.y + 1] == 'C')
 			{
-				if (map[player.actualPosition.x][player.actualPosition.y + 1] == 'P')
-				{
-					player.AddPoints(POINT_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-				}
-				if (map[player.actualPosition.x][player.actualPosition.y + 1] == 'O')
-				{
-					player.AddPoints(POWERUP_DATA::POINTS);
-					hud.UpdateScoreInfo(player.score);
-					powerUpEffect = true;
-					powerLastTime = clock();
-					powerTimeDown = 10;
-				}
+				player.AddPoints(CHERRY_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.cherryCount < 9) hud.cherryCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
+			if (map[player.actualPosition.x][player.actualPosition.y + 1] == 'O')
+			{
+				player.AddPoints(ORANGE_DATA::POINTS);
+				fruitTimeDown = 15.0f;
+				fruitLastTime = clock();
+				createFruit = true;
+				if (hud.orangeCount < 9) hud.orangeCount++;
+				hud.UpdateScoreInfo(player.score);
+			}
 
-				player.actualPosition.y++;
-				map[player.actualPosition.x][player.actualPosition.y] = 'X';
-			}
+			player.actualPosition.y++;
 		}
 	}
+
+	if (player.objectRect.x != player.actualPosition.x * SIZE) player.objectRect.x = player.actualPosition.x * SIZE;
 }
 
 void Play::PlayerDead()
@@ -746,7 +800,7 @@ void Play::CheckGhostsCollisions()
 					blinky.actualPosition.x--;
 				}
 			}
-		}
+		}		
 		break;
 	case 1:
 		if (blinky.objectRect.x >= SIZE * 19 - 1)
@@ -887,6 +941,9 @@ void Play::CheckGhostsCollisions()
 					}
 				}
 			}
+
+			if (inky.objectRect.y != inky.actualPosition.y * SIZE) inky.objectRect.y = inky.actualPosition.y * SIZE;
+			
 			break;
 		case 1:
 			if (inky.objectRect.x >= SIZE * 19 - 1)
@@ -920,6 +977,9 @@ void Play::CheckGhostsCollisions()
 					}
 				}
 			}
+
+			if (inky.objectRect.y != inky.actualPosition.y * SIZE) inky.objectRect.y = inky.actualPosition.y * SIZE;
+
 			break;
 		case 2:
 			if (inky.objectRect.y <= 1)
@@ -953,6 +1013,9 @@ void Play::CheckGhostsCollisions()
 					}
 				}
 			}
+
+			if (inky.objectRect.x != inky.actualPosition.x * SIZE) inky.objectRect.x = inky.actualPosition.x * SIZE;
+
 			break;
 		case 3:
 			if (inky.objectRect.y >= SIZE * 19 - 1)
@@ -986,6 +1049,9 @@ void Play::CheckGhostsCollisions()
 					}
 				}
 			}
+
+			if (inky.objectRect.x != inky.actualPosition.x * SIZE) inky.objectRect.x = inky.actualPosition.x * SIZE;
+
 			break;
 		default:
 			break;
@@ -1027,6 +1093,9 @@ void Play::CheckGhostsCollisions()
 				}
 			}
 		}
+
+		if (clyde.objectRect.y != clyde.actualPosition.y * SIZE) clyde.objectRect.y = clyde.actualPosition.y * SIZE;
+
 		break;
 	case 1:
 		if (clyde.objectRect.x >= SIZE * 19 - 1)
@@ -1060,6 +1129,9 @@ void Play::CheckGhostsCollisions()
 				}
 			}
 		}
+
+		if (clyde.objectRect.y != clyde.actualPosition.y * SIZE) clyde.objectRect.y = clyde.actualPosition.y * SIZE;
+
 		break;
 	case 2:
 		if (clyde.objectRect.y <= 1)
@@ -1093,6 +1165,9 @@ void Play::CheckGhostsCollisions()
 				}
 			}
 		}
+
+		if (clyde.objectRect.x != clyde.actualPosition.x * SIZE) clyde.objectRect.x = clyde.actualPosition.x * SIZE;
+
 		break;
 	case 3:
 		if (clyde.objectRect.y >= SIZE * 19 - 1)
@@ -1126,6 +1201,9 @@ void Play::CheckGhostsCollisions()
 				}
 			}
 		}
+
+		if (clyde.objectRect.x != clyde.actualPosition.x * SIZE) clyde.objectRect.x = clyde.actualPosition.x * SIZE;
+
 		break;
 	default:
 		break;
@@ -1153,11 +1231,18 @@ bool Play::CheckGameOver()
 	{
 		for (int j = 0; j < sizeY; j++)
 		{
-			if(map[i][j] == 'O') return false;
+			if(map[i][j] == 'o') return false;
 			if (map[i][j] == 'P') return false;
 		}
 	}
 	return true;
+}
+
+PlayerRankingInfo Play::GetPlayerRankingInfo()
+{
+	std::string aux;
+	std::cin >> aux;
+	return { player.score,aux };
 }
 
 void Play::Draw()
@@ -1176,11 +1261,20 @@ void Play::Draw()
 				case 'P':
 					Renderer::Instance()->PushSprite(PACMAN_SPRITESHEET::ID, Rect{ (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * POINT::X_SPRITE_POSITION , (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).y / 8) * POINT::Y_SPRITE_POSITION, PACMAN_SPRITESHEET::SPRITES_SIZE, PACMAN_SPRITESHEET::SPRITES_SIZE }, Rect{ i  * SIZE , j * SIZE, SIZE, SIZE });
 					break;
-				case 'O':
+				case 'o':
 					Renderer::Instance()->PushSprite(PACMAN_SPRITESHEET::ID, Rect{ (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * POWERUP::X_SPRITE_POSITION , (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).y / 8) * POWERUP::Y_SPRITE_POSITION, PACMAN_SPRITESHEET::SPRITES_SIZE, PACMAN_SPRITESHEET::SPRITES_SIZE }, Rect{ i  * SIZE , j * SIZE, SIZE, SIZE });
 					break;
 				case 'W':
 					Renderer::Instance()->PushSprite(PACMAN_SPRITESHEET::ID, Rect{ (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * WALL::X_SPRITE_POSITION , (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).y / 8) * WALL::Y_SPRITE_POSITION, PACMAN_SPRITESHEET::SPRITES_SIZE, PACMAN_SPRITESHEET::SPRITES_SIZE }, Rect{ i  * SIZE , j * SIZE, SIZE, SIZE });
+					break;
+				case 'S':
+					Renderer::Instance()->PushSprite(PACMAN_SPRITESHEET::ID, Rect{ (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * STRAWBERRY::X_SPRITE_POSITION , (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).y / 8) * STRAWBERRY::Y_SPRITE_POSITION, PACMAN_SPRITESHEET::SPRITES_SIZE, PACMAN_SPRITESHEET::SPRITES_SIZE }, Rect{ i  * SIZE , j * SIZE, SIZE, SIZE });
+					break;
+				case 'C':
+					Renderer::Instance()->PushSprite(PACMAN_SPRITESHEET::ID, Rect{ (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * CHERRY::X_SPRITE_POSITION , (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).y / 8) * CHERRY::Y_SPRITE_POSITION, PACMAN_SPRITESHEET::SPRITES_SIZE, PACMAN_SPRITESHEET::SPRITES_SIZE }, Rect{ i  * SIZE , j * SIZE, SIZE, SIZE });
+					break;
+				case 'O':
+					Renderer::Instance()->PushSprite(PACMAN_SPRITESHEET::ID, Rect{ (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * ORANGE::X_SPRITE_POSITION , (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).y / 8) * ORANGE::Y_SPRITE_POSITION, PACMAN_SPRITESHEET::SPRITES_SIZE, PACMAN_SPRITESHEET::SPRITES_SIZE }, Rect{ i  * SIZE , j * SIZE, SIZE, SIZE });
 					break;
 				default:
 					break;

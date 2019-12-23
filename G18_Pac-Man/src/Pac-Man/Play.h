@@ -21,12 +21,17 @@ private:
 	HUD hud;
 	int sizeX;
 	int sizeY;
+	int lastFruits[2]; // 1 = strawberry, 2 = cherry, 3 = orange
 	char** map;
 	char** ghostsMap;
 	bool powerUpEffect;
+	bool createFruit;
 	float powerDeltaTime;
 	clock_t powerLastTime;
 	float powerTimeDown;
+	float fruitDeltaTime;
+	clock_t fruitLastTime;
+	float fruitTimeDown;
 	Clyde clyde;
 	Blinky blinky;
 	Inky inky;
@@ -38,6 +43,8 @@ private:
 	void CheckUp();
 	void CheckDown();
 	void CheckBlinkyDirections();
+	int GetRandomNum();
+	void GetRandomFruit();
 	void PlayerDead();
 public:
 	Play();
@@ -45,6 +52,7 @@ public:
 	void CheckPlayerCollisions();
 	void CheckGhostsCollisions();
 	bool CheckGameOver();
+	PlayerRankingInfo GetPlayerRankingInfo();
 	void Draw();
 	~Play();
 };

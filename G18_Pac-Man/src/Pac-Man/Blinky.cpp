@@ -38,13 +38,25 @@ void Blinky::Update()
 		default:
 			break;
 		}
-	}
 
-	//update
-	deltaTime = (clock() - lastTime);
-	lastTime = clock();
-	deltaTime /= CLOCKS_PER_SEC;
-	timeDown -= deltaTime;
+		//update
+		deltaTime = (clock() - lastTime);
+		lastTime = clock();
+		deltaTime /= CLOCKS_PER_SEC;
+		timeDown -= deltaTime;
+	}
+	else
+	{
+		deltaTimeRespawn = (clock() - lastTimeRespawn);
+		lastTimeRespawn = clock();
+		deltaTimeRespawn /= CLOCKS_PER_SEC;
+		timeDownRespawn -= deltaTimeRespawn;
+		if (timeDownRespawn <= 0)
+		{
+			direction = BLINKY_INITIAL_INFO::DIRECTION;
+			dead = false;
+		}
+	}
 }
 
 int Blinky::RandomDirection()
@@ -208,7 +220,11 @@ void Blinky::Respawn()
 	objectRect.y = initialPosition.y * SIZE;
 	actualPosition.x = initialPosition.x;
 	actualPosition.y = initialPosition.y;
-	direction = BLINKY_INITIAL_INFO::DIRECTION;
+	direction = -1;
+	dead = true;
+	timeDownRespawn = 2.0f;
+	lastTimeRespawn = clock();
+	SetNewAnimation(BLINKY::X_LEFT_OPEN_SPRITE);
 }
 
 void Blinky::Draw()

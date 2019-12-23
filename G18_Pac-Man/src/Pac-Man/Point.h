@@ -8,4 +8,3 @@ public:
 	void Draw();
 	~Point();
 };
-

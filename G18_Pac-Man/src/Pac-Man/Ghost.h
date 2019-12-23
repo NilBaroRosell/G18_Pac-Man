@@ -7,13 +7,16 @@ protected:
 	Vec2 initialPosition;
 	int lastAnimation;
 	int lastAnimationPowerUP;
-	int points;
 	bool dead;
 	float deltaTime;
 	clock_t lastTime;
 	float timeDown;
+	float deltaTimeRespawn;
+	clock_t lastTimeRespawn;
+	float timeDownRespawn;
 public:
 	int direction; // 0 -> left, 1 -> right, 2 -> up, 3 -> down
+	int points;
 	int lastDirection;
 	Vec2 actualPosition;
 	Ghost();

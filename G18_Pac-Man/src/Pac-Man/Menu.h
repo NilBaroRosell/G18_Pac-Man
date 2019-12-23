@@ -12,6 +12,7 @@ private:
 public:
 	Menu();
 	void Update(bool * _keys, Vec2 _mousePosition);
+	PlayerRankingInfo GetPlayerRankingInfo();
 	void Draw();
 	~Menu();
 };

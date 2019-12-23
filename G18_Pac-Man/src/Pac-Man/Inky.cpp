@@ -44,6 +44,18 @@ void Inky::Update(bool* _keys)
 		deltaTime /= CLOCKS_PER_SEC;
 		timeDown -= deltaTime;
 	}
+	else
+	{
+		deltaTimeRespawn = (clock() - lastTimeRespawn);
+		lastTimeRespawn = clock();
+		deltaTimeRespawn /= CLOCKS_PER_SEC;
+		timeDownRespawn -= deltaTimeRespawn;
+		if (timeDownRespawn <= 0)
+		{
+			direction = INKY_INITIAL_INFO::DIRECTION;
+			dead = false;
+		}
+	}
 }
 
 void Inky::Move(int _velocity)
@@ -201,7 +213,11 @@ void Inky::Respawn()
 	objectRect.y = initialPosition.y * SIZE;
 	actualPosition.x = initialPosition.x;
 	actualPosition.y = initialPosition.y;
-	direction = INKY_INITIAL_INFO::DIRECTION;
+	direction = -1;
+	dead = true;
+	timeDownRespawn = 2.0f;
+	lastTimeRespawn = clock();
+	SetNewAnimation(INKY::X_LEFT_OPEN_SPRITE);
 }
 
 void Inky::Draw()

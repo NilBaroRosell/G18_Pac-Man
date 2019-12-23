@@ -6,14 +6,19 @@ class HUD
 private:
 	Object hudBackground;
 	Object hudCherry;
-	Object hudCherryScore;
 	Object hudStrawberry;
-	Object hudStrawberryScore;
 	Object hudOrange;
-	Object hudOrangeScore;
 	Object* hudLives;
 	std::string* hudScoreID;
 	Rect* hudScoreRect;
+	std::string hudXID;
+	Rect hudXRect[3];
+	std::string hudStrawberryID;
+	Rect hudStrawberryRect;
+	std::string hudCherryID;
+	Rect hudCherryRect;
+	std::string hudOrangeID;
+	Rect hudOrangeRect;
 	std::string hudSpaceStartID1;
 	Rect hudSpaceStartRect1;
 	std::string hudSpaceStartID2;
@@ -28,6 +33,9 @@ private:
 
 public:
 	Button hudSound;
+	int strawberryCount;
+	int cherryCount;
+	int orangeCount;
 	HUD();
 	void Update();
 	void UpdateScoreInfo(int _playerScore);

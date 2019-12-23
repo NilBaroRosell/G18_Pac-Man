@@ -2,6 +2,10 @@
 
 HUD::HUD()
 {
+	strawberryCount = 0;
+	cherryCount = 0;
+	orangeCount = 0;
+
 	hudBackground.objectId = PACMAN_SPRITESHEET::ID;
 	hudBackground.objectRect = Rect{ SCREEN_HEIGHT, INITIAL_Y, HUD_WIDTH, SCREEN_HEIGHT };
 	hudBackground.objectSpriteRect = Rect{ (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).x / 8) * HUD_INFO::X_BACKGROUND, (Renderer::Instance()->GetTextureSize(PACMAN_SPRITESHEET::ID).y / 8) * HUD_INFO::Y_BACKGROUND, PACMAN_SPRITESHEET::SPRITES_SIZE, PACMAN_SPRITESHEET::SPRITES_SIZE };
@@ -16,6 +20,17 @@ HUD::HUD()
 		hudScoreRect[i].w = HUD_INFO::SCORE_W;
 		hudScoreRect[i].h = HUD_INFO::SCORE_H;
 	}
+
+	hudXID = SCORE_X::ID;
+	hudXRect[0] = Rect{ HUD_INFO::INITIAL_MULTIPLIER_X, HUD_INFO::INITIAL_STRAWBERRY_MULTIPLIER_Y, HUD_INFO::MULTIPLIER_X_SIZE , HUD_INFO::MULTIPLIER_Y_SIZE };
+	hudXRect[1] = Rect{ HUD_INFO::INITIAL_MULTIPLIER_X, HUD_INFO::INITIAL_CHERRY_MULTIPLIER_Y, HUD_INFO::MULTIPLIER_X_SIZE , HUD_INFO::MULTIPLIER_Y_SIZE };
+	hudXRect[2] = Rect{ HUD_INFO::INITIAL_MULTIPLIER_X, HUD_INFO::INITIAL_ORANGE_MULTIPLIER_Y, HUD_INFO::MULTIPLIER_X_SIZE , HUD_INFO::MULTIPLIER_Y_SIZE };
+	hudStrawberryID = SCORE_0::ID;
+	hudStrawberryRect = Rect{ HUD_INFO::INITIAL_FRUITS_COUNT_X, HUD_INFO::INITIAL_STRAWBERRY_COUNT_Y, HUD_INFO::SCORE_W , HUD_INFO::SCORE_H };
+	hudCherryID = SCORE_0::ID;
+	hudCherryRect = Rect{ HUD_INFO::INITIAL_FRUITS_COUNT_X, HUD_INFO::INITIAL_CHERRY_COUNT_Y, HUD_INFO::SCORE_W , HUD_INFO::SCORE_H };
+	hudOrangeID = SCORE_0::ID;
+	hudOrangeRect = Rect{ HUD_INFO::INITIAL_FRUITS_COUNT_X, HUD_INFO::INITIAL_ORANGE_COUNT_Y, HUD_INFO::SCORE_W , HUD_INFO::SCORE_H };
 
 	hudCherry.objectId = PACMAN_SPRITESHEET::ID;
 	hudCherry.objectRect = Rect{ HUD_INFO::INITIAL_CHERRY_X, HUD_INFO::INITIAL_CHERRY_Y, HUD_INFO::CHERRY_SIZE, HUD_INFO::CHERRY_SIZE };
@@ -56,6 +71,113 @@ HUD::HUD()
 
 void HUD::Update()
 {
+	switch (strawberryCount)  
+	{
+	case 0:
+		hudStrawberryID = SCORE_0::ID;
+		break;
+	case 1:
+		hudStrawberryID = SCORE_1::ID;
+		break;
+	case 2:
+		hudStrawberryID = SCORE_2::ID;
+		break;
+	case 3:
+		hudStrawberryID = SCORE_3::ID;
+		break;
+	case 4:
+		hudStrawberryID = SCORE_4::ID;
+		break;
+	case 5:
+		hudStrawberryID = SCORE_5::ID;
+		break;
+	case 6:
+		hudStrawberryID = SCORE_6::ID;
+		break;
+	case 7:
+		hudStrawberryID = SCORE_7::ID;
+		break;
+	case 8:
+		hudStrawberryID = SCORE_8::ID;
+		break;
+	case 9:
+		hudStrawberryID = SCORE_9::ID;
+		break;
+	default:
+		break;
+	}
+
+	switch (cherryCount)
+	{
+	case 0:
+		hudCherryID = SCORE_0::ID;
+		break;
+	case 1:
+		hudCherryID = SCORE_1::ID;
+		break;
+	case 2:
+		hudCherryID = SCORE_2::ID;
+		break;
+	case 3:
+		hudCherryID = SCORE_3::ID;
+		break;
+	case 4:
+		hudCherryID = SCORE_4::ID;
+		break;
+	case 5:
+		hudCherryID = SCORE_5::ID;
+		break;
+	case 6:
+		hudCherryID = SCORE_6::ID;
+		break;
+	case 7:
+		hudCherryID = SCORE_7::ID;
+		break;
+	case 8:
+		hudCherryID = SCORE_8::ID;
+		break;
+	case 9:
+		hudCherryID = SCORE_9::ID;
+		break;
+	default:
+		break;
+	}
+
+	switch (orangeCount)
+	{
+	case 0:
+		hudOrangeID = SCORE_0::ID;
+		break;
+	case 1:
+		hudOrangeID = SCORE_1::ID;
+		break;
+	case 2:
+		hudOrangeID = SCORE_2::ID;
+		break;
+	case 3:
+		hudOrangeID = SCORE_3::ID;
+		break;
+	case 4:
+		hudOrangeID = SCORE_4::ID;
+		break;
+	case 5:
+		hudOrangeID = SCORE_5::ID;
+		break;
+	case 6:
+		hudOrangeID = SCORE_6::ID;
+		break;
+	case 7:
+		hudOrangeID = SCORE_7::ID;
+		break;
+	case 8:
+		hudOrangeID = SCORE_8::ID;
+		break;
+	case 9:
+		hudOrangeID = SCORE_9::ID;
+		break;
+	default:
+		break;
+	}
 }
 
 void HUD::DisableStart()
@@ -138,6 +260,12 @@ void HUD::Draw(int _lives)
 	{
 		Renderer::Instance()->PushImage(hudScoreID[i], hudScoreRect[i]);
 	}
+	Renderer::Instance()->PushImage(hudXID, hudXRect[0]);
+	Renderer::Instance()->PushImage(hudXID, hudXRect[1]);
+	Renderer::Instance()->PushImage(hudXID, hudXRect[2]);
+	Renderer::Instance()->PushImage(hudStrawberryID, hudStrawberryRect);
+	Renderer::Instance()->PushImage(hudCherryID, hudCherryRect);
+	Renderer::Instance()->PushImage(hudOrangeID, hudOrangeRect);
 	Renderer::Instance()->PushSprite(hudCherry.objectId, hudCherry.objectSpriteRect, hudCherry.objectRect);
 	Renderer::Instance()->PushSprite(hudStrawberry.objectId, hudStrawberry.objectSpriteRect, hudStrawberry.objectRect);
 	Renderer::Instance()->PushSprite(hudOrange.objectId, hudOrange.objectSpriteRect, hudOrange.objectRect);

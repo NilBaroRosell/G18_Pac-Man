@@ -5,7 +5,6 @@ class Player : public Object
 {
 private:
 	int velocity;
-	Vec2 initialPosition;
 	int lastAnimation;
 	float deltaTime;
 	clock_t lastTime;
@@ -14,6 +13,7 @@ public:
 	int score;
 	int lives;
 	Vec2 actualPosition;
+	Vec2 initialPosition;
 	int direction;// 0 -> left, 1 -> right, 2 -> up, 3 -> down
 	int lastDirection;
 	Player();

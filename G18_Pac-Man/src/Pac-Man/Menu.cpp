@@ -23,6 +23,7 @@ void Menu::Update(bool * _keys, Vec2 _mousePosition)
 			rankingButton.Update(_keys[(int)InputKey::K_MOUSE], _mousePosition);
 			exitButton.Update(_keys[(int)InputKey::K_MOUSE], _mousePosition);
 			if (playButton.isPressed) state = SceneStates::PLAY_MENU;
+			else if (rankingButton.isPressed) state = SceneStates::RANKING_MENU;
 			else if (soundButton.isPressed)
 			{
 				if (Mix_PlayingMusic())
@@ -45,6 +46,11 @@ void Menu::Update(bool * _keys, Vec2 _mousePosition)
 		default:
 			break;
 	}
+}
+
+PlayerRankingInfo Menu::GetPlayerRankingInfo()
+{
+	return { NULL, NULL };
 }
 
 void Menu::Draw()
